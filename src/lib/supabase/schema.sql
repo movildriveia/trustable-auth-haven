@@ -1,10 +1,15 @@
 
+-- Drop existing tables if they exist (in reverse order of dependencies)
+DROP TABLE IF EXISTS document_permissions;
+DROP TABLE IF EXISTS documents;
+DROP TABLE IF EXISTS profiles;
+
 -- Extension for generating UUIDs
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Create profiles table
 CREATE TABLE IF NOT EXISTS profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  id UUID PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   full_name TEXT,
   avatar_url TEXT,
@@ -21,7 +26,7 @@ CREATE TABLE IF NOT EXISTS profiles (
 -- Create documents table
 CREATE TABLE IF NOT EXISTS documents (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  user_id UUID NOT NULL,
   title TEXT NOT NULL,
   description TEXT,
   content TEXT,
@@ -30,17 +35,20 @@ CREATE TABLE IF NOT EXISTS documents (
   file_size INTEGER,
   file_name TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
 );
 
 -- Create a table to track document access permissions
 CREATE TABLE IF NOT EXISTS document_permissions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  document_id UUID REFERENCES documents(id) ON DELETE CASCADE NOT NULL,
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  document_id UUID NOT NULL,
+  user_id UUID NOT NULL,
   permission_level TEXT NOT NULL CHECK (permission_level IN ('read', 'write', 'admin')),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE,
   UNIQUE(document_id, user_id)
 );
 
@@ -90,18 +98,24 @@ CREATE POLICY "Document owners can manage permissions"
     )
   );
 
--- Create a trigger to automatically create a profile entry when a new user signs up
+-- Create a function to handle new user registration
 CREATE OR REPLACE FUNCTION public.handle_new_user() 
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.profiles (id, email, full_name)
-  VALUES (new.id, new.email, new.raw_user_meta_data->>'full_name');
+  VALUES (
+    new.id, 
+    new.email, 
+    coalesce(new.raw_user_meta_data->>'full_name', '')
+  );
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+-- Drop the trigger if it exists
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+
 -- Set up the trigger on auth.users
-CREATE OR REPLACE TRIGGER on_auth_user_created
+CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-

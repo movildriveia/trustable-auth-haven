@@ -46,22 +46,7 @@ export async function signUpWithEmail(email, password, metadata = {}) {
   try {
     console.log("Starting signup process with:", { email, metadata });
     
-    // First check if user already exists
-    const { data: existingUser } = await supabase
-      .from('profiles')
-      .select('email')
-      .eq('email', email)
-      .single();
-      
-    if (existingUser) {
-      console.log("User already exists with this email");
-      return { 
-        data: null, 
-        error: { message: "User already registered" } 
-      };
-    }
-    
-    // Proceed with sign up if user doesn't exist
+    // Try the sign up process
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -78,25 +63,40 @@ export async function signUpWithEmail(email, password, metadata = {}) {
     
     console.log("Signup response:", data);
     
-    // Ensure profile creation
+    // Check if profile was created by the trigger
     if (data.user) {
-      // Create the profile manually to ensure it exists
-      console.log("Creating profile manually");
-      const { error: insertError } = await supabase
-        .from('profiles')
-        .insert([
-          { 
-            id: data.user.id, 
-            email: email,
-            full_name: metadata.full_name,
-            created_at: new Date(),
-            updated_at: new Date()
-          }
-        ]);
+      // Wait a moment for the trigger to execute
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      if (insertError) {
-        console.error("Error creating profile:", insertError);
-        return { data, error: insertError };
+      // Check if profile exists
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', data.user.id)
+        .single();
+      
+      if (profileError || !profile) {
+        console.log("Profile not found, creating manually");
+        
+        // Create profile manually if not created by trigger
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert([
+            { 
+              id: data.user.id, 
+              email: email,
+              full_name: metadata.full_name || '',
+              created_at: new Date(),
+              updated_at: new Date()
+            }
+          ]);
+        
+        if (insertError) {
+          console.error("Error creating profile:", insertError);
+          return { data, error: insertError };
+        }
+      } else {
+        console.log("Profile already created by trigger:", profile.id);
       }
     }
     
