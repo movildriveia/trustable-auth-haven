@@ -1,4 +1,3 @@
-
 import { createClient } from '@supabase/supabase-js';
 
 // Use the provided credentials
@@ -11,37 +10,24 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 // Sign-in function with email verification check
 export async function signInWithEmail(email, password) {
   try {
-    // First, get user data to check if email is confirmed
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    
-    if (userError && userError.message !== 'Invalid JWT') {
-      console.error("Error checking user:", userError);
-      return { data: null, error: userError };
-    }
-    
-    // Try to sign in
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     
-    // If sign in was successful but email is not confirmed
-    if (data?.user && !data.user.email_confirmed_at) {
-      console.log("Login rejected: Email not confirmed");
-      return { 
-        data: null, 
-        error: { message: "Email not confirmed" } 
-      };
+    if (error) {
+      console.error("Sign in error:", error);
+      return { data: null, error };
     }
     
-    return { data, error };
+    return { data, error: null };
   } catch (err) {
     console.error("Sign in error:", err);
     return { data: null, error: err };
   }
 }
 
-// Sign-up function with email confirmation
+// Sign-up function with manual profile creation
 export async function signUpWithEmail(email, password, metadata = {}) {
   try {
     console.log("Starting signup process with:", { email, metadata });
@@ -63,23 +49,10 @@ export async function signUpWithEmail(email, password, metadata = {}) {
     
     console.log("Signup response:", data);
     
-    // Check if profile was created by the trigger
+    // Manual profile creation
     if (data.user) {
-      // Wait a moment for the trigger to execute
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Check if profile exists
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', data.user.id)
-        .single();
-      
-      if (profileError || !profile) {
-        console.log("Profile not found, creating manually");
-        
-        // Create profile manually if not created by trigger
-        const { error: insertError } = await supabase
+      try {
+        const { error: profileError } = await supabase
           .from('profiles')
           .insert([
             { 
@@ -91,12 +64,16 @@ export async function signUpWithEmail(email, password, metadata = {}) {
             }
           ]);
         
-        if (insertError) {
-          console.error("Error creating profile:", insertError);
-          return { data, error: insertError };
+        if (profileError) {
+          console.error("Error creating profile:", profileError);
+          // Continue anyway since the user is created
+          console.log("User created, but profile creation failed");
+        } else {
+          console.log("Profile created successfully");
         }
-      } else {
-        console.log("Profile already created by trigger:", profile.id);
+      } catch (profileErr) {
+        console.error("Profile creation exception:", profileErr);
+        // Continue anyway since the user is created
       }
     }
     
@@ -107,73 +84,108 @@ export async function signUpWithEmail(email, password, metadata = {}) {
   }
 }
 
-// Función para cerrar sesión
+// Function to sign out
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
   return { error };
 }
 
-// Función para obtener el usuario actual
+// Function to get current user
 export function getUser() {
   return supabase.auth.getUser();
 }
 
-// Función para obtener la sesión actual
+// Function to get current session
 export function getSession() {
   return supabase.auth.getSession();
 }
 
-// Funciones para gestionar perfiles
+// Profile management functions
 
-// Obtener perfil del usuario actual
+// Get current user's profile
 export async function getCurrentProfile() {
-  const { data: { user } } = await getUser();
-  
-  if (!user) return { data: null, error: new Error('No user logged in') };
-  
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single();
+  try {
+    const { data: { user } } = await getUser();
     
-  return { data, error };
+    if (!user) return { data: null, error: new Error('No user logged in') };
+    
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+      
+    return { data, error };
+  } catch (err) {
+    console.error("Error fetching profile:", err);
+    return { data: null, error: err };
+  }
 }
 
-// Actualizar perfil
+// Update profile
 export async function updateProfile(updates) {
-  const { data: { user } } = await getUser();
-  
-  if (!user) return { data: null, error: new Error('No user logged in') };
-  
-  const { data, error } = await supabase
-    .from('profiles')
-    .update(updates)
-    .eq('id', user.id)
-    .select();
+  try {
+    const { data: { user } } = await getUser();
     
-  return { data, error };
+    if (!user) return { data: null, error: new Error('No user logged in') };
+    
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', user.id)
+      .select();
+      
+    return { data, error };
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    return { data: null, error: err };
+  }
 }
 
-// Update company profile information
-export async function updateCompanyProfile(companyInfo) {
-  const { data: { user } } = await getUser();
-  
-  if (!user) return { data: null, error: new Error('No user logged in') };
-  
-  const updates = {
-    ...companyInfo,
-    is_company: true,
-    updated_at: new Date()
-  };
-  
-  const { data, error } = await supabase
-    .from('profiles')
-    .update(updates)
-    .eq('id', user.id)
-    .select();
+// Create profile if it doesn't exist
+export async function createProfileIfNeeded(userId, userData) {
+  try {
+    // Check if profile exists
+    const { data: existingProfile, error: checkError } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', userId)
+      .single();
     
-  return { data, error };
+    if (checkError && checkError.code !== 'PGRST116') {
+      console.error("Error checking profile:", checkError);
+      return { data: null, error: checkError };
+    }
+    
+    // If profile exists, no need to create
+    if (existingProfile) {
+      console.log("Profile already exists:", existingProfile.id);
+      return { data: existingProfile, error: null };
+    }
+    
+    // Create new profile
+    const { data, error } = await supabase
+      .from('profiles')
+      .insert([
+        { 
+          id: userId, 
+          ...userData,
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ])
+      .select();
+    
+    if (error) {
+      console.error("Error creating profile:", error);
+      return { data: null, error };
+    }
+    
+    return { data, error: null };
+  } catch (err) {
+    console.error("Unexpected error handling profile:", err);
+    return { data: null, error: err };
+  }
 }
 
 // Verificar si el email está confirmado
