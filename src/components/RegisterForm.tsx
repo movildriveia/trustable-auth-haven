@@ -16,9 +16,6 @@ const registerSchema = z
     email: z.string().email({ message: "Ingresa un correo electrónico válido" }),
     password: z.string().min(6, { message: "La contraseña debe tener al menos 6 caracteres" }),
     confirmPassword: z.string(),
-    fullName: z.string().min(3, { message: "El nombre completo debe tener al menos 3 caracteres" }),
-    company: z.string().optional(),
-    position: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Las contraseñas no coinciden",
@@ -38,9 +35,6 @@ const RegisterForm = () => {
       email: "",
       password: "",
       confirmPassword: "",
-      fullName: "",
-      company: "",
-      position: "",
     },
   });
 
@@ -48,13 +42,7 @@ const RegisterForm = () => {
     setIsLoading(true);
 
     try {
-      const userMetadata = {
-        full_name: data.fullName,
-        company: data.company || "",
-        position: data.position || "",
-      };
-      
-      const { data: userData, error } = await signUpWithEmail(data.email, data.password, userMetadata);
+      const { data: userData, error } = await signUpWithEmail(data.email, data.password);
       
       if (error) throw error;
       
@@ -105,50 +93,6 @@ const RegisterForm = () => {
               </FormItem>
             )}
           />
-
-          <FormField
-            control={form.control}
-            name="fullName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nombre Completo</FormLabel>
-                <FormControl>
-                  <Input placeholder="Tu nombre completo" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="company"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Empresa (opcional)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nombre de tu empresa" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="position"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Cargo (opcional)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Tu cargo" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
 
           <FormField
             control={form.control}

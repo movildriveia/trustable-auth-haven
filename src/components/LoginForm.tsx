@@ -41,7 +41,7 @@ const LoginForm = () => {
       
       toast({
         title: "Inicio de sesión exitoso",
-        description: "Bienvenido a NexusFinLabs",
+        description: "Redirigiendo al dashboard...",
       });
       
       navigate("/dashboard");

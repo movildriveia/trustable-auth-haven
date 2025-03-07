@@ -1,12 +1,9 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUser, signOut } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import UserProfile from "@/components/UserProfile";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -77,35 +74,23 @@ const Dashboard = () => {
         <Button onClick={handleLogout} variant="outline">Cerrar Sesión</Button>
       </div>
 
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="mb-6">
-          <TabsTrigger value="overview">Resumen</TabsTrigger>
-          <TabsTrigger value="profile">Perfil</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="overview">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Información del Usuario</CardTitle>
-                <CardDescription>Datos de tu cuenta</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <p><span className="font-semibold">Email:</span> {user?.email}</p>
-                  <p><span className="font-semibold">Nombre:</span> {user?.user_metadata?.full_name || "No especificado"}</p>
-                  <p><span className="font-semibold">Empresa:</span> {user?.user_metadata?.company || "No especificado"}</p>
-                  <p><span className="font-semibold">Último inicio:</span> {new Date(user?.last_sign_in_at || Date.now()).toLocaleString()}</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="profile">
-          <UserProfile />
-        </TabsContent>
-      </Tabs>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Información del Usuario</CardTitle>
+            <CardDescription>Datos de tu cuenta</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <p><span className="font-semibold">Email:</span> {user?.email}</p>
+              <p><span className="font-semibold">ID:</span> {user?.id}</p>
+              <p><span className="font-semibold">Último inicio:</span> {new Date(user?.last_sign_in_at || Date.now()).toLocaleString()}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Aquí puedes agregar más tarjetas con información o funcionalidades */}
+      </div>
     </div>
   );
 };
