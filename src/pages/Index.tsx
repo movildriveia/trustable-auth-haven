@@ -79,7 +79,7 @@ const Index = () => {
                   onClick={() => navigate("/register")}
                   className="bg-gradient-to-r from-[#17ffd3] to-[#d3fc71] text-custom-dark min-w-[120px] justify-center hover:bg-white hover:text-custom-dark border hover:border-[#17ffd3] group"
                 >
-                  Get Started
+                  Sign-Up
                   <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
                 <Button 
@@ -93,7 +93,6 @@ const Index = () => {
             </div>
             <div className="hidden lg:block">
               <div className="glass-card p-8 rounded-lg border border-white/20 shadow-xl relative">
-                {/* Remove the white box above Financial Features */}
                 <h3 className="text-white text-xl font-semibold mb-4 text-center">Financial Features</h3>
                 <ul className="text-blue-100 space-y-4">
                   <li className="flex items-start">
