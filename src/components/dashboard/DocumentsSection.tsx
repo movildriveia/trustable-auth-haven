@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,25 +15,35 @@ const DocumentsSection = () => {
   const [documents, setDocuments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [uploadLoading, setUploadLoading] = useState(false);
+  const [documentCount, setDocumentCount] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { getUserDocuments, uploadDocument, deleteDocument, formatFileSize } = useDashboard();
+  const { getUserDocuments, uploadDocument, deleteDocument, formatFileSize, getUserProfile } = useDashboard();
 
-  // Load documents on component mount
-  React.useEffect(() => {
-    const loadDocuments = async () => {
+  // Load documents and user profile on component mount
+  useEffect(() => {
+    const loadData = async () => {
       setIsLoading(true);
+      
+      // Load documents
       const { documents, error } = await getUserDocuments();
       
       if (error) {
         toast.error("Failed to load documents");
       } else if (documents) {
         setDocuments(documents);
+        setDocumentCount(documents.length);
+      }
+      
+      // Load user profile to get doc_count
+      const { profile } = await getUserProfile();
+      if (profile && profile.doc_count !== undefined) {
+        setDocumentCount(profile.doc_count);
       }
       
       setIsLoading(false);
     };
     
-    loadDocuments();
+    loadData();
   }, []);
 
   // Handle file selection from the input
@@ -69,6 +79,7 @@ const DocumentsSection = () => {
       
       if (success && document) {
         setDocuments(prev => [...prev, document]);
+        setDocumentCount(prev => prev + 1);
         toast.success(`Uploaded: ${file.name}`);
       } else {
         toast.error(`Failed to upload ${file.name}: ${error?.message || 'Unknown error'}`);
@@ -90,6 +101,7 @@ const DocumentsSection = () => {
       
       if (success) {
         setDocuments(documents.filter(doc => doc.id !== id));
+        setDocumentCount(prev => prev - 1);
         toast.success(`Deleted: ${name}`);
       } else {
         toast.error(`Failed to delete ${name}: ${error?.message || 'Unknown error'}`);
@@ -115,7 +127,10 @@ const DocumentsSection = () => {
     <div className="bg-white rounded-lg shadow-sm p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-custom-dark">Your Documents</h2>
-        <div>
+        <div className="flex items-center gap-4">
+          <div className="text-sm text-gray-600 border border-gray-200 px-3 py-1 rounded-md bg-gray-50">
+            Documents: <span className="font-medium">{documentCount}</span>/{MAX_FILES}
+          </div>
           <input
             type="file"
             accept={ALLOWED_EXTENSIONS.join(',')}
@@ -128,6 +143,7 @@ const DocumentsSection = () => {
             onClick={() => fileInputRef.current?.click()}
             disabled={uploadLoading || documents.length >= MAX_FILES}
             className="flex items-center"
+            variant="yellowGradient"
           >
             <Upload className="mr-2 h-4 w-4" />
             {uploadLoading ? 'Uploading...' : 'Upload Document'}

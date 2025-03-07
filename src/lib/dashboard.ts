@@ -2,7 +2,7 @@
 import { toast } from "sonner";
 import { supabase } from "./supabase";
 
-// Interfaz para el perfil de usuario
+// Interface for user profile
 export interface UserProfile {
   id: string;
   first_name?: string;
@@ -11,9 +11,13 @@ export interface UserProfile {
   email?: string;
   created_at?: string;
   updated_at?: string;
+  doc_count?: number;
+  google?: boolean;
+  aws?: boolean;
+  azure?: boolean;
 }
 
-// Interfaz para documentos
+// Interface for documents
 export interface Document {
   id: string;
   name: string;
@@ -24,9 +28,9 @@ export interface Document {
   user_id: string;
 }
 
-// Funciones para el dashboard
+// Dashboard functions
 export const useDashboard = () => {
-  // Obtener el perfil del usuario actual
+  // Get current user profile
   const getUserProfile = async (): Promise<{
     profile: UserProfile | null;
     error: Error | null;
@@ -56,7 +60,7 @@ export const useDashboard = () => {
     }
   };
   
-  // Actualizar el perfil del usuario
+  // Update user profile
   const updateUserProfile = async (profile: Partial<UserProfile>): Promise<{
     success: boolean;
     error: Error | null;
@@ -89,7 +93,7 @@ export const useDashboard = () => {
     }
   };
   
-  // Obtener documentos del usuario
+  // Get user documents
   const getUserDocuments = async (): Promise<{
     documents: Document[] | null;
     error: Error | null;
@@ -112,6 +116,14 @@ export const useDashboard = () => {
         return { documents: null, error };
       }
       
+      // Update doc_count in profile if it doesn't match
+      if (data) {
+        const { profile } = await getUserProfile();
+        if (profile && profile.doc_count !== data.length) {
+          await updateUserProfile({ doc_count: data.length });
+        }
+      }
+      
       return { documents: data as Document[], error: null };
     } catch (err: any) {
       console.error("Unexpected error:", err);
@@ -119,7 +131,7 @@ export const useDashboard = () => {
     }
   };
   
-  // Subir un documento
+  // Upload document
   const uploadDocument = async (file: File): Promise<{
     success: boolean;
     document?: Document;
@@ -132,16 +144,11 @@ export const useDashboard = () => {
         return { success: false, error: new Error("No active session") };
       }
       
-      // Validar tipo de archivo si es necesario
-      // if (file.type !== 'application/pdf') {
-      //   return { success: false, error: new Error("Only PDF files are allowed") };
-      // }
-      
-      // Nombre único para el archivo
+      // Unique filename
       const fileName = `${Date.now()}_${file.name}`;
       const filePath = `${session.user.id}/${fileName}`;
       
-      // Subir archivo a Supabase Storage
+      // Upload file to Supabase Storage
       const { data, error: uploadError } = await supabase.storage
         .from('documents')
         .upload(filePath, file);
@@ -151,12 +158,12 @@ export const useDashboard = () => {
         return { success: false, error: uploadError };
       }
       
-      // Obtener URL pública
+      // Get public URL
       const { data: publicUrlData } = supabase.storage
         .from('documents')
         .getPublicUrl(filePath);
       
-      // Guardar metadatos en la base de datos
+      // Save metadata to database
       const { data: documentData, error: insertError } = await supabase
         .from('documents')
         .insert([
@@ -176,6 +183,13 @@ export const useDashboard = () => {
         return { success: false, error: insertError };
       }
       
+      // Update document count in profile
+      const { profile } = await getUserProfile();
+      if (profile) {
+        const newCount = (profile.doc_count || 0) + 1;
+        await updateUserProfile({ doc_count: newCount });
+      }
+      
       toast.success("Document uploaded successfully");
       return { 
         success: true, 
@@ -188,13 +202,13 @@ export const useDashboard = () => {
     }
   };
   
-  // Eliminar un documento
+  // Delete document
   const deleteDocument = async (id: string): Promise<{
     success: boolean;
     error: Error | null;
   }> => {
     try {
-      // Primero obtener el documento para encontrar la ruta del archivo
+      // First get the document to find the file path
       const { data: document, error: fetchError } = await supabase
         .from('documents')
         .select('file_path')
@@ -210,7 +224,7 @@ export const useDashboard = () => {
         return { success: false, error: new Error("No active session") };
       }
       
-      // Extraer el nombre del archivo de la URL para obtener la ruta de almacenamiento
+      // Extract filename from URL to get storage path
       if (document && document.file_path) {
         const urlParts = document.file_path.split('/');
         const fileName = urlParts[urlParts.length - 1];
@@ -218,19 +232,19 @@ export const useDashboard = () => {
         if (fileName) {
           const storagePath = `${session.user.id}/${fileName}`;
           
-          // Intentar eliminar el archivo del almacenamiento
+          // Try to delete file from storage
           const { error: storageError } = await supabase.storage
             .from('documents')
             .remove([storagePath]);
           
           if (storageError) {
             console.warn('Error deleting file from storage:', storageError);
-            // Continuar con la eliminación de la base de datos incluso si falla
+            // Continue with database deletion even if storage deletion fails
           }
         }
       }
       
-      // Eliminar de la base de datos
+      // Delete from database
       const { error } = await supabase
         .from('documents')
         .delete()
@@ -241,6 +255,12 @@ export const useDashboard = () => {
         return { success: false, error };
       }
       
+      // Update document count in profile
+      const { profile } = await getUserProfile();
+      if (profile && profile.doc_count && profile.doc_count > 0) {
+        await updateUserProfile({ doc_count: profile.doc_count - 1 });
+      }
+      
       toast.success("Document deleted successfully");
       return { success: true, error: null };
     } catch (err: any) {
@@ -249,7 +269,44 @@ export const useDashboard = () => {
     }
   };
   
-  // Formatear tamaño de archivo
+  // Update AI service settings
+  const updateAISettings = async (settings: {
+    google?: boolean;
+    aws?: boolean;
+    azure?: boolean;
+  }): Promise<{
+    success: boolean;
+    error: Error | null;
+  }> => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        return { success: false, error: new Error("No active session") };
+      }
+      
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          ...settings,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', session.user.id);
+      
+      if (error) {
+        toast.error(`Failed to update AI settings: ${error.message}`);
+        return { success: false, error };
+      }
+      
+      toast.success("AI settings updated successfully");
+      return { success: true, error: null };
+    } catch (err: any) {
+      toast.error(`Unexpected error: ${err.message}`);
+      return { success: false, error: err };
+    }
+  };
+  
+  // Format file size
   const formatFileSize = (bytes: number): string => {
     if (!bytes) return '0 Bytes';
     const k = 1024;
@@ -264,6 +321,7 @@ export const useDashboard = () => {
     getUserDocuments,
     uploadDocument,
     deleteDocument,
+    updateAISettings,
     formatFileSize
   };
 };

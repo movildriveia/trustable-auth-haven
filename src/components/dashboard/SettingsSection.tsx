@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 
@@ -18,6 +19,8 @@ const SettingsSection = () => {
     azure: false,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
 
   // Load user settings on component mount
   useEffect(() => {
@@ -61,39 +64,63 @@ const SettingsSection = () => {
     loadSettings();
   }, []);
 
-  const handleToggle = async (setting: keyof AIServiceSettings) => {
+  const handleToggle = (setting: keyof AIServiceSettings) => {
+    const newValue = !settings[setting];
+    
+    setSettings(prev => ({
+      ...prev,
+      [setting]: newValue
+    }));
+    
+    setHasChanges(true);
+    
+    // Show toast notification
+    toast.success(`${newValue ? 'Activated' : 'Deactivated'} the workflow for Cloud AI-Analysis (${setting.toUpperCase()})`);
+  };
+  
+  const saveSettings = async () => {
+    setSaving(true);
+    
     try {
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError || !sessionData.session) {
-        toast.error("Unable to update settings: No active session");
+        toast.error("Unable to save settings: No active session");
+        setSaving(false);
         return;
       }
       
       const userId = sessionData.session.user.id;
-      const newValue = !settings[setting];
+      const userEmail = sessionData.session.user.email;
       
       // Update in the database
       const { error } = await supabase
         .from('profiles')
-        .update({ [setting]: newValue })
+        .update({
+          google: settings.google,
+          aws: settings.aws,
+          azure: settings.azure,
+          updated_at: new Date().toISOString()
+        })
         .eq('id', userId);
       
       if (error) {
-        toast.error(`Failed to update ${setting}: ${error.message}`);
+        toast.error(`Failed to save settings: ${error.message}`);
+        setSaving(false);
         return;
       }
       
-      // Update the state if the database update was successful
-      setSettings({
-        ...settings,
-        [setting]: newValue,
-      });
+      // Send notification email (implement this in your backend)
+      // This is just a placeholder for where you would send the email
+      // You would typically call a serverless function here
       
-      toast.success(`${setting} ${newValue ? 'enabled' : 'disabled'}`);
+      toast.success("Settings saved successfully");
+      setHasChanges(false);
     } catch (err) {
       toast.error("An unexpected error occurred");
       console.error(err);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -148,10 +175,19 @@ const SettingsSection = () => {
         </div>
       </div>
       
-      <div className="mt-6 pt-6 border-t">
+      <div className="mt-6 pt-6 border-t flex justify-between items-center">
         <p className="text-sm text-gray-500">
           Note: Enabling these services may require additional configuration in your account settings.
         </p>
+        
+        <Button 
+          onClick={saveSettings} 
+          disabled={saving || !hasChanges}
+          variant="yellowGradient"
+          className="px-6"
+        >
+          {saving ? 'Saving...' : 'Save Settings'}
+        </Button>
       </div>
     </div>
   );
