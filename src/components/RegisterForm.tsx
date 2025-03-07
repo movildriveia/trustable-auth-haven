@@ -13,13 +13,13 @@ import { signUpWithEmail } from "@/lib/supabase";
 
 const registerSchema = z
   .object({
-    fullName: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
-    email: z.string().email({ message: "Ingresa un correo electrónico válido" }),
-    password: z.string().min(6, { message: "La contraseña debe tener al menos 6 caracteres" }),
+    fullName: z.string().min(2, { message: "Name must be at least 2 characters" }),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    password: z.string().min(6, { message: "Password must be at least 6 characters" }),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Las contraseñas no coinciden",
+    message: "Passwords don't match",
     path: ["confirmPassword"],
   });
 
@@ -56,19 +56,19 @@ const RegisterForm = () => {
       setIsSuccess(true);
       
       toast({
-        title: "Registro exitoso",
-        description: "Hemos enviado un correo de confirmación. Por favor verifica tu bandeja de entrada.",
+        title: "Registration successful",
+        description: "We've sent a confirmation email. Please check your inbox.",
         variant: "default",
       });
       
     } catch (error) {
-      console.error("Error al registrar:", error);
+      console.error("Registration error:", error);
       toast({
-        title: "Error al registrar",
+        title: "Registration error",
         description: 
           error.message === "User already registered" 
-            ? "Este correo ya está registrado" 
-            : "Ha ocurrido un error, por favor intenta nuevamente",
+            ? "This email is already registered" 
+            : "An error occurred, please try again",
         variant: "destructive",
       });
     } finally {
@@ -84,17 +84,17 @@ const RegisterForm = () => {
         </div>
         
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold">Verifica tu correo electrónico</h1>
+          <h1 className="text-2xl font-bold">Verify your email</h1>
           <p className="text-muted-foreground">
-            Hemos enviado un enlace de confirmación a tu correo electrónico.
-            <br />Por favor verifica tu correo para activar tu cuenta.
+            We've sent a confirmation link to your email.
+            <br />Please check your email to activate your account.
           </p>
         </div>
         
         <div className="flex flex-col space-y-3">
           <Button variant="outline" className="gap-2" onClick={() => navigate("/login")}>
             <Mail className="h-4 w-4" />
-            Ir a iniciar sesión
+            Go to login
           </Button>
         </div>
       </div>
@@ -104,9 +104,9 @@ const RegisterForm = () => {
   return (
     <div>
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold mb-2">Crear una cuenta</h1>
+        <h1 className="text-3xl font-bold mb-2">Create an account</h1>
         <p className="text-muted-foreground">
-          Regístrate para acceder a todas las funcionalidades
+          Sign up to access all features
         </p>
       </div>
 
@@ -117,9 +117,9 @@ const RegisterForm = () => {
             name="fullName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nombre Completo</FormLabel>
+                <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Tu nombre completo" {...field} />
+                  <Input placeholder="Your full name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -131,9 +131,9 @@ const RegisterForm = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Correo Electrónico</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="correo@ejemplo.com" {...field} />
+                  <Input placeholder="email@example.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -145,7 +145,7 @@ const RegisterForm = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Contraseña</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="••••••••" {...field} />
                 </FormControl>
@@ -159,7 +159,7 @@ const RegisterForm = () => {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirmar Contraseña</FormLabel>
+                <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="••••••••" {...field} />
                 </FormControl>
@@ -168,14 +168,14 @@ const RegisterForm = () => {
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" variant="gradient" size="lg" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Registrando...
+                Signing up...
               </>
             ) : (
-              "Registrarse"
+              "Sign up"
             )}
           </Button>
         </form>
@@ -183,9 +183,9 @@ const RegisterForm = () => {
 
       <div className="mt-6 text-center">
         <p className="text-sm text-muted-foreground">
-          ¿Ya tienes una cuenta?{" "}
+          Already have an account?{" "}
           <Button variant="link" onClick={() => navigate("/login")} className="p-0">
-            Inicia Sesión
+            Log in
           </Button>
         </p>
       </div>

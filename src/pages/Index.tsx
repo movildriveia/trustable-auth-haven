@@ -224,10 +224,9 @@ const Index = () => {
           
           <div className="mt-12 text-center">
             <Button 
-              variant="registerBtn"
-              size="lg"
+              variant="startNow"
+              size="xl"
               onClick={() => navigate("/register")}
-              className="px-10"
             >
               Start Now
             </Button>
