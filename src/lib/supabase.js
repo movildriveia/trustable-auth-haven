@@ -1,54 +1,106 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Usamos las credenciales proporcionadas
+// Use the provided credentials
 const supabaseUrl = 'https://qioxddkbyetflxmdghmu.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpb3hkZGtieWV0Zmx4bWRnaG11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA1NzU3NjIsImV4cCI6MjA1NjE1MTc2Mn0.njPacJDLKGMKqtHRmpW5V5rC_x-k23P6NRR0LKLDz5o';
 
-// Crear el cliente de Supabase
+// Create the Supabase client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Función de inicio de sesión
+// Sign-in function with email verification check
 export async function signInWithEmail(email, password) {
-  // First, check if the user exists and has verified their email
-  const { data: usersList, error: usersError } = await supabase.auth.admin.listUsers({
-    email,
-  });
-
-  if (usersError) {
-    console.error("Error checking user:", usersError);
-    return { data: null, error: usersError };
+  try {
+    // First, get user data to check if email is confirmed
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    
+    if (userError && userError.message !== 'Invalid JWT') {
+      console.error("Error checking user:", userError);
+      return { data: null, error: userError };
+    }
+    
+    // Try to sign in
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    
+    // If sign in was successful but email is not confirmed
+    if (data?.user && !data.user.email_confirmed_at) {
+      console.log("Login rejected: Email not confirmed");
+      return { 
+        data: null, 
+        error: { message: "Email not confirmed" } 
+      };
+    }
+    
+    return { data, error };
+  } catch (err) {
+    console.error("Sign in error:", err);
+    return { data: null, error: err };
   }
-
-  const user = usersList?.users?.[0];
-  
-  // If user exists but email is not confirmed, return custom error
-  if (user && !user.email_confirmed_at) {
-    return { 
-      data: null, 
-      error: { message: "Email not confirmed" } 
-    };
-  }
-
-  // Proceed with login if email is confirmed or user doesn't exist (will return auth error)
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-  
-  return { data, error };
 }
 
-// Función de registro con confirmación de email
+// Sign-up function with email confirmation
 export async function signUpWithEmail(email, password, metadata = {}) {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: metadata,
-      emailRedirectTo: `${window.location.origin}/login`,
-    },
-  });
-  return { data, error };
+  try {
+    console.log("Starting signup process with:", { email, metadata });
+    
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: metadata,
+        emailRedirectTo: `${window.location.origin}/login`,
+      },
+    });
+    
+    if (error) {
+      console.error("Signup error from Supabase:", error);
+      return { data: null, error };
+    }
+    
+    console.log("Signup response:", data);
+    
+    // The profile should be created automatically by the database trigger
+    // but we can verify it was created correctly
+    if (data.user) {
+      // Check if profile exists
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .single();
+      
+      if (profileError && profileError.code !== 'PGRST116') {
+        console.error("Error verifying profile creation:", profileError);
+      } else if (!profile) {
+        // If profile doesn't exist (which shouldn't happen with the trigger),
+        // create it manually
+        console.log("Creating profile manually");
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert([
+            { 
+              id: data.user.id, 
+              email: email,
+              full_name: metadata.full_name,
+              created_at: new Date(),
+              updated_at: new Date()
+            }
+          ]);
+        
+        if (insertError) {
+          console.error("Error creating profile:", insertError);
+          return { data, error: insertError };
+        }
+      }
+    }
+    
+    return { data, error };
+  } catch (err) {
+    console.error("Unexpected error during signup:", err);
+    return { data: null, error: err };
+  }
 }
 
 // Función para cerrar sesión

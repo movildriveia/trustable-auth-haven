@@ -45,13 +45,20 @@ const RegisterForm = () => {
     setIsLoading(true);
 
     try {
+      console.log("Registering user:", { email: data.email, name: data.fullName });
+      
       const { data: userData, error } = await signUpWithEmail(
         data.email, 
         data.password, 
         { full_name: data.fullName }
       );
       
-      if (error) throw error;
+      console.log("Registration response:", { userData, error });
+      
+      if (error) {
+        console.error("Registration error details:", error);
+        throw error;
+      }
       
       setIsSuccess(true);
       
@@ -63,12 +70,19 @@ const RegisterForm = () => {
       
     } catch (error) {
       console.error("Registration error:", error);
+      
+      // More descriptive error message based on the error
+      let errorMessage = "An error occurred, please try again";
+      
+      if (error.message === "User already registered") {
+        errorMessage = "This email is already registered";
+      } else if (error.message?.includes("database") || error.code === "23505") {
+        errorMessage = "Database error when creating your account. Please try again later.";
+      }
+      
       toast({
-        title: "Registration error",
-        description: 
-          error.message === "User already registered" 
-            ? "This email is already registered" 
-            : "An error occurred, please try again",
+        title: "Error al registrar",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -168,7 +182,7 @@ const RegisterForm = () => {
             )}
           />
 
-          <Button type="submit" variant="purple" size="sm" className="w-full" disabled={isLoading}>
+          <Button type="submit" variant="purple" size="sm" className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
