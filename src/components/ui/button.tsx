@@ -22,11 +22,11 @@ const buttonVariants = cva(
         lime: "bg-[#d3fc71] text-custom-dark font-medium hover:shadow-md hover:scale-[1.02] hover:brightness-[1.05]",
       },
       size: {
-        default: "h-9 px-4 py-1.5",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-6 text-base",
-        xl: "h-12 rounded-md px-8 text-lg",
-        icon: "h-9 w-9",
+        default: "h-8 px-4 py-1",
+        sm: "h-7 rounded-md px-3 text-xs",
+        lg: "h-10 rounded-md px-5 text-base",
+        xl: "h-11 rounded-md px-6 text-lg",
+        icon: "h-8 w-8",
       },
     },
     defaultVariants: {

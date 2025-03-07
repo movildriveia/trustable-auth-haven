@@ -9,16 +9,18 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col font-poppins">
       {/* Header */}
-      <header className="bg-white py-4 px-6">
+      <header className="bg-white py-4 px-6 shadow-sm">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold text-custom-dark flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#17ffd3] to-[#23e3ee]"></div>
-            AuthSystem
+          <div className="text-2xl font-bold text-custom-dark flex items-center gap-3">
+            <img 
+              src="/lovable-uploads/cef7b659-e171-45b6-ab88-91595b5a7ffd.png" 
+              alt="Nexus FinLabs" 
+              className="h-12"
+            />
           </div>
           <div className="flex items-center gap-8">
             <nav className="hidden md:flex items-center gap-8 mr-8">
               <a href="#" className="text-custom-dark hover:text-primary-custom transition-colors">Home</a>
-              <a href="#services" className="text-custom-dark hover:text-primary-custom transition-colors">Services</a>
               <a href="#contact" className="text-custom-dark hover:text-primary-custom transition-colors">Contact</a>
             </nav>
             <div className="flex gap-3">
@@ -46,11 +48,12 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-custom-dark">
-                Sistema de Autenticación <span className="text-primary-custom">Seguro y Robusto</span>
+              <h1 className="text-4xl md:text-5xl font-bold mb-3 text-custom-dark">
+                FinTech<br/>Observatory
               </h1>
-              <p className="text-xl text-color mb-8">
-                Implementa un sistema de registro y login eficaz con almacenamiento seguro en Supabase. Protege tus datos con las mejores prácticas de seguridad.
+              <p className="text-xl text-color mb-4">
+                Your financial playground.<br/>
+                Powered by data, built for you.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
@@ -82,37 +85,37 @@ const Index = () => {
               </div>
               <div className="bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/20">
                 <div className="mb-6 flex justify-center">
-                  <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                  </div>
+                  <img 
+                    src="/lovable-uploads/ca6a196b-ae2f-4233-a3f2-061b279cda67.png" 
+                    alt="Nexus FinLabs Logo" 
+                    className="h-20"
+                  />
                 </div>
-                <h3 className="text-custom-dark text-xl font-semibold mb-4 text-center">Características de Seguridad</h3>
+                <h3 className="text-custom-dark text-xl font-semibold mb-4 text-center">Financial Features</h3>
                 <ul className="text-custom-dark space-y-3">
                   <li className="flex items-start">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-custom-dark mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Autenticación segura con JWT
+                    Real-time market analysis
                   </li>
                   <li className="flex items-start">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-custom-dark mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Almacenamiento encriptado
+                    Personalized portfolios
                   </li>
                   <li className="flex items-start">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-custom-dark mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Protección contra ataques CSRF
+                    AI-powered predictions
                   </li>
                   <li className="flex items-start">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-custom-dark mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Recuperación de contraseña
+                    Risk management tools
                   </li>
                 </ul>
               </div>
@@ -121,29 +124,22 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="py-16 bg-white">
-        <div className="container mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-custom-dark">Nuestros Servicios</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gradient-to-b from-green-100 to-lime-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-              <h3 className="text-xl font-semibold mb-4 text-custom-dark">Autenticación Segura</h3>
-              <p className="text-custom-text mb-6">Implementamos sistemas de login y registro con las mejores prácticas de seguridad.</p>
-              <Button variant="lime" size="sm">Más Información</Button>
-            </div>
-            
-            <div className="bg-gradient-to-b from-cyan-100 to-blue-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-              <h3 className="text-xl font-semibold mb-4 text-custom-dark">Almacenamiento de Datos</h3>
-              <p className="text-custom-text mb-6">Guardamos tu información de forma encriptada y segura utilizando Supabase.</p>
-              <Button variant="turquoise" size="sm">Más Información</Button>
-            </div>
-            
-            <div className="bg-gradient-to-b from-purple-100 to-indigo-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-              <h3 className="text-xl font-semibold mb-4 text-custom-dark">Personalización</h3>
-              <p className="text-custom-text mb-6">Adaptamos las soluciones a tus necesidades específicas y requerimientos.</p>
-              <Button variant="purple" size="sm">Más Información</Button>
-            </div>
+      {/* Ready to Start Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-6 max-w-3xl text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-custom-dark">Ready to Start?</h2>
+          <p className="text-lg mb-8">
+            Kickstart your journey with us by filling out a quick form to get to know you better!
+          </p>
+          <div className="flex justify-center">
+            <Button 
+              variant="gradient"
+              size="lg"
+              onClick={() => navigate("/register")}
+              className="px-10"
+            >
+              Start Now
+            </Button>
           </div>
         </div>
       </section>
@@ -177,8 +173,17 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="bg-gray-50 border-t py-8">
-        <div className="container mx-auto px-6 text-center text-color text-sm">
-          Sistema de Autenticación con Supabase &copy; {new Date().getFullYear()} - Todos los derechos reservados
+        <div className="container mx-auto px-6 text-center">
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/lovable-uploads/25877594-b9f1-47b1-9b83-99aed8b6cfc7.png" 
+              alt="Nexus FinLabs" 
+              className="h-10"
+            />
+          </div>
+          <div className="text-color text-sm">
+            Nexus FinLabs - Observatory &copy; {new Date().getFullYear()} - All rights reserved
+          </div>
         </div>
       </footer>
     </div>
