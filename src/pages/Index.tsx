@@ -245,8 +245,13 @@ const Index = () => {
             <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center border border-gray-100 hover:border-blue-100">
               <h3 className="text-xl font-semibold mb-2 text-custom-dark">Email Us</h3>
               <p className="text-gray-600 mb-4">Send us an email with your questions or requirements.</p>
-              <Button variant="turquoise" size="sm" className="group">
-                Email
+              <Button 
+                variant="gradient" 
+                size="lg" 
+                className="group w-full justify-center"
+                onClick={() => window.location.href = 'mailto:info@nexusfinlabs.com'}
+              >
+                Contact Us
                 <ExternalLink className="ml-1 h-3.5 w-3.5 opacity-70" />
               </Button>
             </div>
@@ -254,8 +259,13 @@ const Index = () => {
             <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center border border-gray-100 hover:border-blue-100">
               <h3 className="text-xl font-semibold mb-2 text-custom-dark">Call Us</h3>
               <p className="text-gray-600 mb-4">Schedule a call to discuss your project.</p>
-              <Button variant="gradient" size="sm" className="group">
-                Schedule
+              <Button 
+                variant="blue" 
+                size="lg" 
+                className="group w-full justify-center"
+                onClick={() => window.location.href = 'tel:+1234567890'}
+              >
+                Book Call
                 <ExternalLink className="ml-1 h-3.5 w-3.5 opacity-70" />
               </Button>
             </div>
@@ -263,8 +273,13 @@ const Index = () => {
             <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center border border-gray-100 hover:border-blue-100">
               <h3 className="text-xl font-semibold mb-2 text-custom-dark">Visit Us</h3>
               <p className="text-gray-600 mb-4">Our offices are open Monday to Friday.</p>
-              <Button variant="blue" size="sm" className="group">
-                Directions
+              <Button 
+                variant="purple" 
+                size="lg" 
+                className="group w-full justify-center"
+                onClick={() => window.open('https://maps.google.com', '_blank')}
+              >
+                Get Location
                 <ExternalLink className="ml-1 h-3.5 w-3.5 opacity-70" />
               </Button>
             </div>

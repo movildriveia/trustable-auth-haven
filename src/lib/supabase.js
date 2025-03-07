@@ -1,4 +1,3 @@
-
 import { createClient } from '@supabase/supabase-js';
 
 // Usamos las credenciales proporcionadas
@@ -82,4 +81,94 @@ export async function updateProfile(updates) {
 export async function isEmailConfirmed() {
   const { data: { user } } = await getUser();
   return user?.email_confirmed_at ? true : false;
+}
+
+// Document management functions
+export async function getDocuments() {
+  const { data: { user } } = await getUser();
+  
+  if (!user) return { data: null, error: new Error('No user logged in') };
+  
+  const { data, error } = await supabase
+    .from('documents')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false });
+    
+  return { data, error };
+}
+
+export async function getDocument(id) {
+  const { data, error } = await supabase
+    .from('documents')
+    .select('*')
+    .eq('id', id)
+    .single();
+    
+  return { data, error };
+}
+
+export async function createDocument(documentData) {
+  const { data: { user } } = await getUser();
+  
+  if (!user) return { data: null, error: new Error('No user logged in') };
+  
+  const { data, error } = await supabase
+    .from('documents')
+    .insert([
+      { 
+        ...documentData, 
+        user_id: user.id 
+      }
+    ])
+    .select();
+    
+  return { data, error };
+}
+
+export async function updateDocument(id, updates) {
+  const { data, error } = await supabase
+    .from('documents')
+    .update(updates)
+    .eq('id', id)
+    .select();
+    
+  return { data, error };
+}
+
+export async function deleteDocument(id) {
+  const { error } = await supabase
+    .from('documents')
+    .delete()
+    .eq('id', id);
+    
+  return { error };
+}
+
+// Storage functions
+export async function uploadFile(bucket, path, file) {
+  const { data, error } = await supabase.storage
+    .from(bucket)
+    .upload(path, file, {
+      cacheControl: '3600',
+      upsert: true
+    });
+  
+  return { data, error };
+}
+
+export async function getFileUrl(bucket, path) {
+  const { data } = await supabase.storage
+    .from(bucket)
+    .getPublicUrl(path);
+  
+  return data.publicUrl;
+}
+
+export async function deleteFile(bucket, path) {
+  const { error } = await supabase.storage
+    .from(bucket)
+    .remove([path]);
+  
+  return { error };
 }
