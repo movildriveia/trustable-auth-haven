@@ -24,11 +24,8 @@ const Index = () => {
       <header className="py-4 px-6 sticky top-0 z-50 bg-transparent backdrop-blur-sm">
         <div className="container mx-auto flex justify-between items-center">
           <div className="text-2xl font-bold text-white flex items-center gap-3">
-            <img 
-              src="/lovable-uploads/cef7b659-e171-45b6-ab88-91595b5a7ffd.png" 
-              alt="Nexus FinLabs" 
-              className="h-10"
-            />
+            {/* Logo removed as requested */}
+            <span>Nexus FinLabs</span>
           </div>
           <div className="flex items-center gap-8">
             <nav className="hidden md:flex items-center gap-8 mr-8">
@@ -39,14 +36,14 @@ const Index = () => {
             </nav>
             <div className="flex gap-3">
               <Button 
-                variant="loginBtn"
+                className="bg-white text-custom-dark border border-gray-300 hover:bg-white hover:text-custom-dark hover:border-gray-400 min-w-[100px] justify-center text-xs py-1.5"
                 size="xs"
                 onClick={() => navigate("/login")}
               >
                 Login
               </Button>
               <Button 
-                variant="registerBtnCompact"
+                className="bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-white border border-transparent hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#9b87f5] hover:shadow-md min-w-[100px] justify-center text-xs py-1.5"
                 size="xs"
                 onClick={() => navigate("/register")}
               >
@@ -62,7 +59,6 @@ const Index = () => {
         <div className="container mx-auto px-6 relative z-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="text-white">
-              {/* Removed logo here */}
               <h1 className="text-6xl md:text-7xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
                 FinTech<br/>
                 Observatory
@@ -74,14 +70,14 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
                   onClick={() => navigate("/register")}
-                  className="bg-gradient-to-r from-[#17ffd3] to-[#d3fc71] text-custom-dark min-w-[120px] justify-center hover:bg-white hover:text-custom-dark border hover:border-[#17ffd3] group"
+                  className="bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-white min-w-[120px] justify-center hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#9b87f5] hover:shadow-md group"
                 >
                   Sign-Up
                   <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
                 <Button 
                   onClick={() => navigate("/login")}
-                  className="bg-transparent border-white/30 text-white min-w-[120px] justify-center hover:bg-[#17ffd3] hover:border-transparent hover:text-custom-dark"
+                  className="bg-white text-custom-dark border border-gray-300 min-w-[120px] justify-center hover:bg-white hover:text-custom-dark hover:border-gray-400"
                   variant="outline"
                 >
                   Login
@@ -221,7 +217,7 @@ const Index = () => {
           
           <div className="mt-12 text-center">
             <Button 
-              variant="startNow"
+              className="bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-white font-semibold hover:shadow-lg hover:scale-[1.03] hover:brightness-[1.05] min-w-[180px] justify-center px-10 py-6 text-base"
               size="xl"
               onClick={() => navigate("/register")}
             >
@@ -293,7 +289,6 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex justify-center mb-6 md:mb-0">
-              {/* Removed logo here */}
               <span className="text-xl font-semibold text-white">Nexus FinLabs</span>
             </div>
             <div className="flex gap-8 mb-6 md:mb-0">
@@ -312,3 +307,4 @@ const Index = () => {
 };
 
 export default Index;
+

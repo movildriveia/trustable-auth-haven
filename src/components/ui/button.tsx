@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -24,8 +23,8 @@ const buttonVariants = cva(
         modern: "bg-white border border-gray-200 text-slate-900 hover:border-blue-400 hover:text-blue-600 hover:shadow-md",
         glass: "bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-white/20 hover:shadow-md",
         // Enhanced gradient buttons
-        loginBtn: "bg-white text-custom-dark border border-gray-300 hover:bg-[#17ffd3] hover:text-custom-dark hover:border-transparent hover:shadow-md min-w-[120px] justify-center",
-        registerBtn: "bg-gradient-to-r from-[#17ffd3] to-[#d3fc71] text-custom-dark border border-transparent hover:bg-gradient-to-r hover:from-[#d3fc71] hover:to-[#17ffd3] hover:shadow-md min-w-[120px] justify-center",
+        loginBtn: "bg-white text-custom-dark border border-gray-300 hover:bg-white hover:text-custom-dark hover:border-gray-400 hover:shadow-md min-w-[120px] justify-center",
+        registerBtn: "bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-white border border-transparent hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#9b87f5] hover:shadow-md min-w-[120px] justify-center",
         startNow: "bg-gradient-to-r from-[#17ffd3] to-[#d3fc71] text-custom-dark font-semibold hover:shadow-lg hover:scale-[1.03] hover:brightness-[1.05] min-w-[180px] justify-center px-10 py-6 text-base",
         // New compact register button with purple gradient
         registerBtnCompact: "bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-white border border-transparent hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#9b87f5] hover:shadow-md min-w-[100px] justify-center text-xs py-1.5",
