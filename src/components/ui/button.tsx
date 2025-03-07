@@ -27,6 +27,8 @@ const buttonVariants = cva(
         loginBtn: "bg-white text-custom-dark border border-gray-300 hover:bg-[#17ffd3] hover:text-custom-dark hover:border-transparent hover:shadow-md min-w-[120px] justify-center",
         registerBtn: "bg-gradient-to-r from-[#17ffd3] to-[#d3fc71] text-custom-dark border border-transparent hover:bg-gradient-to-r hover:from-[#d3fc71] hover:to-[#17ffd3] hover:shadow-md min-w-[120px] justify-center",
         startNow: "bg-gradient-to-r from-[#17ffd3] to-[#d3fc71] text-custom-dark font-semibold hover:shadow-lg hover:scale-[1.03] hover:brightness-[1.05] min-w-[180px] justify-center px-10 py-6 text-base",
+        // New compact register button with purple gradient
+        registerBtnCompact: "bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-white border border-transparent hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#9b87f5] hover:shadow-md min-w-[100px] justify-center text-xs py-1.5",
       },
       size: {
         default: "h-9 px-4 py-2",
@@ -34,6 +36,7 @@ const buttonVariants = cva(
         lg: "h-11 rounded-md px-6 text-base",
         xl: "h-12 rounded-md px-8 text-lg",
         icon: "h-9 w-9",
+        xs: "h-7 rounded-md px-2.5 text-xs",
       },
     },
     defaultVariants: {

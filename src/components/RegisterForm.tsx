@@ -168,7 +168,7 @@ const RegisterForm = () => {
             )}
           />
 
-          <Button type="submit" variant="gradient" size="lg" className="w-full" disabled={isLoading}>
+          <Button type="submit" variant="purple" size="sm" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

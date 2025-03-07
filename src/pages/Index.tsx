@@ -40,14 +40,14 @@ const Index = () => {
             <div className="flex gap-3">
               <Button 
                 variant="loginBtn"
-                size="sm"
+                size="xs"
                 onClick={() => navigate("/login")}
               >
                 Login
               </Button>
               <Button 
-                variant="registerBtn"
-                size="sm"
+                variant="registerBtnCompact"
+                size="xs"
                 onClick={() => navigate("/register")}
               >
                 Sign-Up
