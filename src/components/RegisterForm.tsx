@@ -81,7 +81,7 @@ const RegisterForm = () => {
       }
       
       toast({
-        title: "Error al registrar",
+        title: "Registration error",
         description: errorMessage,
         variant: "destructive",
       });

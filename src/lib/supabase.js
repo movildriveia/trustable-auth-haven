@@ -1,3 +1,4 @@
+
 import { createClient } from '@supabase/supabase-js';
 
 // Use the provided credentials
@@ -45,6 +46,22 @@ export async function signUpWithEmail(email, password, metadata = {}) {
   try {
     console.log("Starting signup process with:", { email, metadata });
     
+    // First check if user already exists
+    const { data: existingUser } = await supabase
+      .from('profiles')
+      .select('email')
+      .eq('email', email)
+      .single();
+      
+    if (existingUser) {
+      console.log("User already exists with this email");
+      return { 
+        data: null, 
+        error: { message: "User already registered" } 
+      };
+    }
+    
+    // Proceed with sign up if user doesn't exist
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -61,42 +78,29 @@ export async function signUpWithEmail(email, password, metadata = {}) {
     
     console.log("Signup response:", data);
     
-    // The profile should be created automatically by the database trigger
-    // but we can verify it was created correctly
+    // Ensure profile creation
     if (data.user) {
-      // Check if profile exists
-      const { data: profile, error: profileError } = await supabase
+      // Create the profile manually to ensure it exists
+      console.log("Creating profile manually");
+      const { error: insertError } = await supabase
         .from('profiles')
-        .select('*')
-        .eq('id', data.user.id)
-        .single();
+        .insert([
+          { 
+            id: data.user.id, 
+            email: email,
+            full_name: metadata.full_name,
+            created_at: new Date(),
+            updated_at: new Date()
+          }
+        ]);
       
-      if (profileError && profileError.code !== 'PGRST116') {
-        console.error("Error verifying profile creation:", profileError);
-      } else if (!profile) {
-        // If profile doesn't exist (which shouldn't happen with the trigger),
-        // create it manually
-        console.log("Creating profile manually");
-        const { error: insertError } = await supabase
-          .from('profiles')
-          .insert([
-            { 
-              id: data.user.id, 
-              email: email,
-              full_name: metadata.full_name,
-              created_at: new Date(),
-              updated_at: new Date()
-            }
-          ]);
-        
-        if (insertError) {
-          console.error("Error creating profile:", insertError);
-          return { data, error: insertError };
-        }
+      if (insertError) {
+        console.error("Error creating profile:", insertError);
+        return { data, error: insertError };
       }
     }
     
-    return { data, error };
+    return { data, error: null };
   } catch (err) {
     console.error("Unexpected error during signup:", err);
     return { data: null, error: err };
