@@ -1,0 +1,7 @@
+
+/* Main CSS file that imports all other CSS files */
+@import './base.css';
+@import './typography.css';
+@import './animations.css';
+@import './components.css';
+@import './buttons.css';
