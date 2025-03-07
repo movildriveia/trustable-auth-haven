@@ -1,4 +1,3 @@
-
 import { createClient } from '@supabase/supabase-js';
 
 // Usamos las credenciales proporcionadas
@@ -10,10 +9,32 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Función de inicio de sesión
 export async function signInWithEmail(email, password) {
+  // First, check if the user exists and has verified their email
+  const { data: usersList, error: usersError } = await supabase.auth.admin.listUsers({
+    email,
+  });
+
+  if (usersError) {
+    console.error("Error checking user:", usersError);
+    return { data: null, error: usersError };
+  }
+
+  const user = usersList?.users?.[0];
+  
+  // If user exists but email is not confirmed, return custom error
+  if (user && !user.email_confirmed_at) {
+    return { 
+      data: null, 
+      error: { message: "Email not confirmed" } 
+    };
+  }
+
+  // Proceed with login if email is confirmed or user doesn't exist (will return auth error)
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
+  
   return { data, error };
 }
 
