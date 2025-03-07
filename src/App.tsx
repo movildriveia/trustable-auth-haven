@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,7 +20,7 @@ import NotFound from "./pages/NotFound";
 // Create a new QueryClient instance
 const queryClient = new QueryClient();
 
-// Protección de rutas
+// Protected route
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);

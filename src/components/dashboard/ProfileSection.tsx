@@ -206,35 +206,21 @@ const ProfileSection = () => {
           <p className="text-xs text-gray-500">Email cannot be changed</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="doc_count">Document Count</Label>
-            <Input
-              id="doc_count"
-              name="doc_count"
-              value={profile?.doc_count || 0}
-              disabled
-              readOnly
-              className="bg-gray-100"
-            />
-            <p className="text-xs text-gray-500">This is updated automatically</p>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="created_at">Account Created</Label>
-            <Input
-              id="created_at"
-              name="created_at"
-              value={profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : ""}
-              disabled
-              readOnly
-              className="bg-gray-100"
-            />
-          </div>
+        <div className="space-y-2">
+          <Label htmlFor="doc_count">Document Count</Label>
+          <Input
+            id="doc_count"
+            name="doc_count"
+            value={profile?.doc_count || 0}
+            disabled
+            readOnly
+            className="bg-gray-100"
+          />
+          <p className="text-xs text-gray-500">This is updated automatically</p>
         </div>
         
         <div className="pt-4">
-          <Button type="submit" disabled={saving}>
+          <Button type="submit" variant="yellowGradient" disabled={saving}>
             {saving ? "Saving..." : "Save Changes"}
           </Button>
         </div>

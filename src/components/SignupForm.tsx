@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -191,7 +192,7 @@ const SignupForm = () => {
             )}
           />
 
-          <Button type="submit" variant="startNow" className="w-full" disabled={isLoading}>
+          <Button type="submit" variant="yellowGradient" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

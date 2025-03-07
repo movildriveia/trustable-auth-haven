@@ -57,7 +57,7 @@ const Dashboard = () => {
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-xl font-semibold text-custom-dark mb-6">Dashboard Overview</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-lg shadow-sm">
               <h3 className="text-lg font-medium text-blue-900">Welcome Back</h3>
               <p className="text-blue-800 mt-2">{profile?.first_name} {profile?.last_name}</p>
@@ -78,32 +78,19 @@ const Dashboard = () => {
                 <p className="text-sm text-purple-700">Available</p>
               </div>
             </div>
-            
-            <div className="bg-gradient-to-r from-amber-50 to-amber-100 p-6 rounded-lg shadow-sm">
-              <h3 className="text-lg font-medium text-amber-900">Last Login</h3>
-              <p className="text-amber-800 mt-2">{new Date().toLocaleDateString()}</p>
-            </div>
           </div>
         </div>
         
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-xl font-semibold text-custom-dark mb-6">Quick Actions</h2>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <button
               onClick={() => navigate("/dashboard/documents")}
               className="bg-white border border-gray-200 rounded-lg p-4 text-left hover:shadow-md transition-shadow"
             >
               <h3 className="font-medium text-custom-dark">Upload Documents</h3>
               <p className="text-sm text-gray-500 mt-1">Manage your documents and files</p>
-            </button>
-            
-            <button
-              onClick={() => navigate("/dashboard/settings")}
-              className="bg-white border border-gray-200 rounded-lg p-4 text-left hover:shadow-md transition-shadow"
-            >
-              <h3 className="font-medium text-custom-dark">Configure AI</h3>
-              <p className="text-sm text-gray-500 mt-1">Set up your AI service preferences</p>
             </button>
             
             <button
