@@ -22,7 +22,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <h1 className="text-lg font-semibold text-custom-dark">Dashboard</h1>
-            {/* Quitamos el botón de logout de aquí ya que lo movimos al Dashboard component */}
+            {/* El botón de logout ahora está en el Dashboard component */}
           </div>
         </header>
         
