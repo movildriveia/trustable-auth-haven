@@ -5,15 +5,20 @@ const HeroSection = () => {
   return (
     <section className="hero-section hero" data-background="" style={{ backgroundImage: "url(images/hero-area/banner-bg.png)" }}>
       <div className="container">
-        <div className="row">
-          <div className="col-lg-12 text-center zindex-1">
-            <h1 className="mb-3"> FinTech<br />Observatory</h1>
+        <div className="row align-items-center">
+          <div className="col-lg-5 text-center text-lg-left mb-5 mb-lg-0">
+            <h1 className="mb-3">FinTech Observatory</h1>
             <p className="mb-4">
-              Your financial playground.<br />
-              Powered by data, built for you.</p>
-            <a href="#pricing" className="btn btn-secondary btn-lg">Contact us</a>
-            {/* Banner image */}
-            <img className="img-fluid w-100 banner-image" src="images/hero-area/banner-img.png" alt="banner-img" />
+              Your financial playground. Powered by data, built for you.
+              Discover the future of financial technology with our cutting-edge platform.
+            </p>
+            <div className="d-flex flex-column flex-sm-row">
+              <a href="#pricing" className="btn btn-secondary btn-lg mr-3 mb-3 mb-sm-0">Explore Services</a>
+              <a href="#about" className="btn btn-outline-primary btn-lg">Learn More</a>
+            </div>
+          </div>
+          <div className="col-lg-7">
+            <img className="img-fluid w-100" src="images/hero-area/banner-img.png" alt="banner-img" />
           </div>
         </div>
       </div>
