@@ -1,4 +1,3 @@
-
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // Types for user metadata and documents
@@ -7,6 +6,7 @@ export interface UserMetadata {
   last_name?: string;
   company_name?: string;
   email?: string;
+  full_name?: string;  // Added this field to fix the type error
 }
 
 export interface Document {
