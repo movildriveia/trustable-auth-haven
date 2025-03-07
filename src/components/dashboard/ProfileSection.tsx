@@ -35,12 +35,13 @@ const ProfileSection = () => {
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError || !sessionData.session) {
-        toast.error("No active session");
+        toast.error("No se encontró una sesión activa");
         setLoading(false);
         return;
       }
       
       const userId = sessionData.session.user.id;
+      console.log("User ID:", userId);
       
       const { data, error } = await supabase
         .from('profiles')
@@ -49,13 +50,15 @@ const ProfileSection = () => {
         .single();
       
       if (error) {
-        toast.error(`Failed to load profile: ${error.message}`);
+        console.error("Error al cargar perfil:", error);
+        toast.error(`Error al cargar perfil: ${error.message}`);
       } else if (data) {
+        console.log("Perfil cargado:", data);
         setProfile(data);
       }
     } catch (err) {
-      toast.error("An unexpected error occurred");
-      console.error(err);
+      console.error("Error inesperado:", err);
+      toast.error("Ocurrió un error inesperado");
     } finally {
       setLoading(false);
     }
@@ -81,19 +84,27 @@ const ProfileSection = () => {
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError || !sessionData.session) {
-        toast.error("No active session");
+        toast.error("No se encontró una sesión activa");
         setSaving(false);
         return;
       }
       
       const userId = sessionData.session.user.id;
       
-      // Ensure user can only modify their own profile
+      // Asegurarnos de que el usuario solo pueda modificar su propio perfil
       if (userId !== profile.id) {
-        toast.error("You can only modify your own profile");
+        toast.error("Solo puedes modificar tu propio perfil");
         setSaving(false);
         return;
       }
+      
+      console.log("Actualizando perfil con datos:", {
+        first_name: profile.first_name,
+        last_name: profile.last_name,
+        company_name: profile.company_name,
+        company_description: profile.company_description,
+        company_website: profile.company_website,
+      });
       
       const { error } = await supabase
         .from('profiles')
@@ -108,13 +119,14 @@ const ProfileSection = () => {
         .eq('id', userId);
       
       if (error) {
-        toast.error(`Failed to update profile: ${error.message}`);
+        console.error("Error al actualizar perfil:", error);
+        toast.error(`Error al actualizar perfil: ${error.message}`);
       } else {
-        toast.success("Profile updated successfully");
+        toast.success("Perfil actualizado correctamente");
       }
     } catch (err) {
-      toast.error("An unexpected error occurred");
-      console.error(err);
+      console.error("Error inesperado:", err);
+      toast.error("Ocurrió un error inesperado");
     } finally {
       setSaving(false);
     }
@@ -123,78 +135,78 @@ const ProfileSection = () => {
   if (loading) {
     return (
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-xl font-semibold text-custom-dark mb-6">Profile</h2>
-        <div className="text-center py-6">Loading profile information...</div>
+        <h2 className="text-xl font-semibold text-custom-dark mb-6">Perfil</h2>
+        <div className="text-center py-6">Cargando información del perfil...</div>
       </div>
     );
   }
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
-      <h2 className="text-xl font-semibold text-custom-dark mb-6">Profile Information</h2>
+      <h2 className="text-xl font-semibold text-custom-dark mb-6">Información de Perfil</h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="first_name">First Name</Label>
+            <Label htmlFor="first_name">Nombre</Label>
             <Input
               id="first_name"
               name="first_name"
               value={profile?.first_name || ""}
               onChange={handleChange}
-              placeholder="First Name"
+              placeholder="Nombre"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="last_name">Last Name</Label>
+            <Label htmlFor="last_name">Apellido</Label>
             <Input
               id="last_name"
               name="last_name"
               value={profile?.last_name || ""}
               onChange={handleChange}
-              placeholder="Last Name"
+              placeholder="Apellido"
             />
           </div>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="company_name">Company Name</Label>
+          <Label htmlFor="company_name">Nombre de Empresa</Label>
           <Input
             id="company_name"
             name="company_name"
             value={profile?.company_name || ""}
             onChange={handleChange}
-            placeholder="Company Name"
+            placeholder="Nombre de Empresa"
           />
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="company_description">Company Description</Label>
+          <Label htmlFor="company_description">Descripción de Empresa</Label>
           <textarea
             id="company_description"
             name="company_description"
             value={profile?.company_description || ""}
             onChange={handleChange}
-            placeholder="Brief description of your company"
+            placeholder="Breve descripción de tu empresa"
             className="w-full h-24 px-3 py-2 text-base text-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="company_website">Company Website</Label>
+          <Label htmlFor="company_website">Sitio Web de Empresa</Label>
           <Input
             id="company_website"
             name="company_website"
             type="url"
             value={profile?.company_website || ""}
             onChange={handleChange}
-            placeholder="https://example.com"
+            placeholder="https://ejemplo.com"
           />
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="email">Email Address</Label>
+          <Label htmlFor="email">Correo Electrónico</Label>
           <Input
             id="email"
             name="email"
@@ -203,11 +215,11 @@ const ProfileSection = () => {
             readOnly
             className="bg-gray-100"
           />
-          <p className="text-xs text-gray-500">Email cannot be changed</p>
+          <p className="text-xs text-gray-500">El correo electrónico no se puede cambiar</p>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="doc_count">Document Count</Label>
+          <Label htmlFor="doc_count">Número de Documentos</Label>
           <Input
             id="doc_count"
             name="doc_count"
@@ -216,12 +228,12 @@ const ProfileSection = () => {
             readOnly
             className="bg-gray-100"
           />
-          <p className="text-xs text-gray-500">This is updated automatically</p>
+          <p className="text-xs text-gray-500">Este valor se actualiza automáticamente</p>
         </div>
         
         <div className="pt-4">
-          <Button type="submit" variant="yellowGradient" disabled={saving}>
-            {saving ? "Saving..." : "Save Changes"}
+          <Button type="submit" variant="registerBtn" disabled={saving}>
+            {saving ? "Guardando..." : "Guardar Cambios"}
           </Button>
         </div>
       </form>
