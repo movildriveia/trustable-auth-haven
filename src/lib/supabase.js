@@ -1,3 +1,4 @@
+
 import { createClient } from '@supabase/supabase-js';
 
 // Usamos las credenciales proporcionadas
@@ -77,6 +78,27 @@ export async function updateProfile(updates) {
   return { data, error };
 }
 
+// Update company profile information
+export async function updateCompanyProfile(companyInfo) {
+  const { data: { user } } = await getUser();
+  
+  if (!user) return { data: null, error: new Error('No user logged in') };
+  
+  const updates = {
+    ...companyInfo,
+    is_company: true,
+    updated_at: new Date()
+  };
+  
+  const { data, error } = await supabase
+    .from('profiles')
+    .update(updates)
+    .eq('id', user.id)
+    .select();
+    
+  return { data, error };
+}
+
 // Verificar si el email está confirmado
 export async function isEmailConfirmed() {
   const { data: { user } } = await getUser();
@@ -145,6 +167,52 @@ export async function deleteDocument(id) {
   return { error };
 }
 
+// Check if user has reached document limit (max 10 documents)
+export async function checkDocumentLimit() {
+  const { data, error } = await getDocuments();
+  
+  if (error) return { limitReached: false, error };
+  
+  return { 
+    limitReached: data && data.length >= 10,
+    currentCount: data ? data.length : 0,
+    error: null
+  };
+}
+
+// Document permissions management
+export async function shareDocument(documentId, userId, permissionLevel = 'read') {
+  const { data, error } = await supabase
+    .from('document_permissions')
+    .insert([
+      { 
+        document_id: documentId,
+        user_id: userId,
+        permission_level: permissionLevel
+      }
+    ])
+    .select();
+    
+  return { data, error };
+}
+
+export async function getSharedDocuments() {
+  const { data: { user } } = await getUser();
+  
+  if (!user) return { data: null, error: new Error('No user logged in') };
+  
+  const { data, error } = await supabase
+    .from('document_permissions')
+    .select(`
+      id,
+      permission_level,
+      documents (*)
+    `)
+    .eq('user_id', user.id);
+    
+  return { data, error };
+}
+
 // Storage functions
 export async function uploadFile(bucket, path, file) {
   const { data, error } = await supabase.storage
@@ -153,6 +221,64 @@ export async function uploadFile(bucket, path, file) {
       cacheControl: '3600',
       upsert: true
     });
+  
+  return { data, error };
+}
+
+// Upload a document file and create a document record
+export async function uploadDocument(file, documentInfo) {
+  const { data: { user } } = await getUser();
+  
+  if (!user) return { data: null, error: new Error('No user logged in') };
+  
+  // Check file type
+  const fileExt = file.name.split('.').pop().toLowerCase();
+  const allowedTypes = ['pdf', 'xlsx', 'xls', 'doc', 'docx', 'ppt', 'pptx'];
+  
+  if (!allowedTypes.includes(fileExt)) {
+    return { 
+      data: null, 
+      error: new Error('File type not allowed. Allowed types: PDF, Excel, Word, PowerPoint') 
+    };
+  }
+  
+  // Check file size (10MB max)
+  const maxSize = 10 * 1024 * 1024; // 10MB
+  if (file.size > maxSize) {
+    return { 
+      data: null, 
+      error: new Error('File size exceeds the 10MB limit') 
+    };
+  }
+  
+  // Check document limit
+  const { limitReached, error: limitError } = await checkDocumentLimit();
+  if (limitError) return { data: null, error: limitError };
+  if (limitReached) {
+    return { 
+      data: null, 
+      error: new Error('You have reached the maximum limit of 10 documents') 
+    };
+  }
+  
+  // Upload file to storage
+  const filePath = `documents/${user.id}/${Date.now()}_${file.name}`;
+  const { data: fileData, error: fileError } = await uploadFile('documents', filePath, file);
+  
+  if (fileError) return { data: null, error: fileError };
+  
+  // Get file URL
+  const fileUrl = await getFileUrl('documents', filePath);
+  
+  // Create document record
+  const { data, error } = await createDocument({
+    title: documentInfo.title || file.name,
+    description: documentInfo.description || '',
+    document_url: fileUrl,
+    file_type: fileExt,
+    file_size: file.size,
+    file_name: file.name
+  });
   
   return { data, error };
 }
@@ -169,6 +295,31 @@ export async function deleteFile(bucket, path) {
   const { error } = await supabase.storage
     .from(bucket)
     .remove([path]);
+  
+  return { error };
+}
+
+// Delete document and its file
+export async function deleteDocumentWithFile(documentId) {
+  // Get document to find file path
+  const { data: document, error: getError } = await getDocument(documentId);
+  
+  if (getError) return { error: getError };
+  if (!document) return { error: new Error('Document not found') };
+  
+  // Extract path from URL
+  const url = document.document_url;
+  if (url) {
+    const pathMatch = url.match(/documents\/(.+)/);
+    if (pathMatch && pathMatch[1]) {
+      const filePath = pathMatch[1];
+      // Delete file from storage
+      await deleteFile('documents', filePath);
+    }
+  }
+  
+  // Delete document record
+  const { error } = await deleteDocument(documentId);
   
   return { error };
 }
