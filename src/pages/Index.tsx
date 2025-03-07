@@ -1,119 +1,197 @@
 
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const navigate = useNavigate();
 
-  return (
-    <div className="min-h-screen flex flex-col font-poppins">
-      {/* Header */}
-      <header className="bg-white border-b shadow-sm">
-        <div className="container mx-auto py-4 px-6 flex justify-between items-center">
-          <div className="text-2xl font-bold text-custom-dark">AuthSystem</div>
-          <div className="flex gap-4">
-            <button 
-              className="btn-custom btn-secondary-custom"
-              onClick={() => navigate("/login")}
-            >
-              Iniciar Sesión
-            </button>
-            <button 
-              className="btn-custom btn-primary-custom"
-              onClick={() => navigate("/register")}
-            >
-              Registrarse
-            </button>
-          </div>
-        </div>
-      </header>
+  // Función para redireccionar a la página de registro
+  const handleSignUp = () => {
+    navigate('/register');
+  };
 
-      {/* Hero Section */}
-      <section className="flex-grow flex items-center section">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-custom-dark">
-                Sistema de Autenticación <span className="text-primary-custom">Seguro y Robusto</span>
-              </h1>
-              <p className="text-xl text-color mb-8">
-                Implementa un sistema de registro y login eficaz con almacenamiento seguro en Supabase. Protege tus datos con las mejores prácticas de seguridad.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button 
-                  onClick={() => navigate("/register")}
-                  className="btn-custom btn-primary-custom"
-                >
-                  Comenzar Ahora
-                </button>
-                <button 
-                  onClick={() => navigate("/login")}
-                  className="btn-custom btn-secondary-custom"
-                >
-                  Iniciar Sesión
-                </button>
-              </div>
+  // Código para manejar el formulario de typeform
+  useEffect(() => {
+    // Configurar listener para el botón Start Now
+    const startNowBtn = document.getElementById('start-now-btn');
+    const formContainer = document.getElementById('form-container');
+    
+    if (startNowBtn && formContainer) {
+      startNowBtn.addEventListener('click', () => {
+        formContainer.style.display = 'block';
+      });
+    }
+
+    // Configurar listener para el botón de email (Ask)
+    const setupEmailButton = () => {
+      const askButton = document.getElementById('ask');
+      if (askButton) {
+        const part1 = ["%6e", "%65", "%78", "%75", "%73", "%66", "%69", "%6e", "%6c", "%61", "%62", "%73"];
+        const part2 = ["%40"];
+        const part3 = ["%6e", "%65", "%78", "%75", "%73", "%66", "%69", "%6e", "%6c", "%61", "%62", "%73", "%2e", "%63", "%6f", "%6d"];
+        const actionParts = ["%6d", "%61", "%69", "%6c", "%74", "%6f", "%3a"];
+
+        const action = decodeURIComponent(actionParts.join(""));
+        const user = decodeURIComponent(part1.join(""));
+        const domain = decodeURIComponent(part3.join(""));
+        const separator = decodeURIComponent(part2.join(""));
+
+        const fullAddress = action + user + separator + domain;
+
+        askButton.addEventListener('click', () => {
+          window.location.href = fullAddress;
+        });
+      }
+    };
+
+    setupEmailButton();
+
+    // Limpieza de event listeners
+    return () => {
+      if (startNowBtn) {
+        startNowBtn.removeEventListener('click', () => {});
+      }
+      if (document.getElementById('ask')) {
+        document.getElementById('ask')?.removeEventListener('click', () => {});
+      }
+    };
+  }, []);
+
+  return (
+    <>
+      {/* Navigation */}
+      <section className="fixed-top navigation">
+        <div className="container">
+          <nav className="navbar navbar-expand-lg navbar-light">
+            <a className="navbar-brand" href="index.html"><img src="images/logo.png" alt="logo" /></a>
+            <button className="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
+              aria-expanded="false" aria-label="Toggle navigation">
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            {/* Navbar */}
+            <div className="collapse navbar-collapse text-center" id="navbar">
+              <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <a className="nav-link" href="index.html">Home</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link page-scroll" href="#pricing">Services</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="contact.html">Contact</a>
+                </li>
+              </ul>
+              <button onClick={handleSignUp} className="btn btn-primary primary-shadow">Sign up</button>
             </div>
-            <div className="hidden lg:block bg-gradient-to-br from-[#17ffd3] to-[#d3fc71] p-8 rounded-xl shadow-xl relative">
-              <div className="hero-bg-1 animate-left-right">
-                <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="10.5" cy="10.5" r="10.5" fill="#17FFD3" fillOpacity="0.3"/>
-                </svg>
-              </div>
-              <div className="hero-bg-2 animate-up-down">
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="7.5" cy="7.5" r="7.5" fill="#D3FC71" fillOpacity="0.3"/>
-                </svg>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/20">
-                <div className="mb-6 flex justify-center">
-                  <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-custom-dark text-xl font-semibold mb-4 text-center">Características de Seguridad</h3>
-                <ul className="text-custom-dark space-y-3">
-                  <li className="flex items-start">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-custom-dark mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Autenticación segura con JWT
-                  </li>
-                  <li className="flex items-start">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-custom-dark mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Almacenamiento encriptado
-                  </li>
-                  <li className="flex items-start">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-custom-dark mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Protección contra ataques CSRF
-                  </li>
-                  <li className="flex items-start">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-custom-dark mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Recuperación de contraseña
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          </nav>
         </div>
       </section>
 
+      {/* Hero Area */}
+      <section className="hero-section hero" data-background="" style={{ backgroundImage: "url(images/hero-area/banner-bg.png)" }}>
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12 text-center zindex-1">
+              <h1 className="mb-3"> FinTech<br />Observatory</h1>
+              <p className="mb-4">
+                Your financial playground.<br />
+                Powered by data, built for you.</p>
+              <a href="#pricing" className="btn btn-secondary btn-lg">Contact us</a>
+              {/* Banner image */}
+              <img className="img-fluid w-100 banner-image" src="images/hero-area/banner-img.png" alt="banner-img" />
+            </div>
+          </div>
+        </div>
+
+        {/* Background shapes */}
+        <div id="scene">
+          <img className="img-fluid hero-bg-1 up-down-animation" src="images/background-shape/feature-bg-2.png" alt="" />
+          <img className="img-fluid hero-bg-2 left-right-animation" src="images/background-shape/seo-ball-1.png" alt="" />
+          <img className="img-fluid hero-bg-3 left-right-animation" src="images/background-shape/seo-half-cycle.png" alt="" />
+          <img className="img-fluid hero-bg-4 up-down-animation" src="images/background-shape/green-dot.png" alt="" />
+          <img className="img-fluid hero-bg-5 left-right-animation" src="images/background-shape/blue-half-cycle.png" alt="" />
+          <img className="img-fluid hero-bg-6 up-down-animation" src="images/background-shape/seo-ball-1.png" alt="" />
+          <img className="img-fluid hero-bg-7 left-right-animation" src="images/background-shape/yellow-triangle.png" alt="" />
+          <img className="img-fluid hero-bg-8 up-down-animation" src="images/background-shape/service-half-cycle.png" alt="" />
+          <img className="img-fluid hero-bg-9 up-down-animation" src="images/background-shape/team-bg-triangle.png" alt="" />
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="section-lg pb-0 pricing" id="pricing">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12 text-center">
+              <h2 className="section-title">Collaboration</h2>
+            </div>
+            <div className="col-lg-10 mx-auto">
+              <div className="row justify-content-center">
+
+                {/* Pricing table */}
+                <div className="col-md-6 col-lg-4 mb-5 mb-lg-0">
+                  <div className="rounded text-center pricing-table table-1">
+                    <h3>Write</h3>
+                    <p>Drop us an email to know more about us.</p>
+                    <a id="ask" className="btn btn-primary">Email Us</a>
+                  </div>
+                </div>
+
+                {/* Pricing table */}
+                <div className="col-md-6 col-lg-4 mb-5 mb-lg-0">
+                  <div className="rounded text-center pricing-table table-2">
+                    <h3>Call</h3>
+                    <p>Schedule an online meeting with us to enable a comprehensive advisory session.</p>
+                    <a className="btn btn-primary" href="https://calendly.com/nexusfinlabs/30-min-meeting">Book</a>
+                  </div>
+                </div>
+
+                {/* Pricing table */}
+                <div className="col-md-6 col-lg-4 mb-5 mb-lg-0">
+                  <div className="rounded text-center pricing-table table-3">
+                    <h3>Custom Analysis</h3>
+                    <p>Request a custom strategic roadmap covering Market Research, Feasibility Study, and more.</p>
+                    <a href="contact.html" className="btn btn-secondary">Contact</a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Ready to Start Section */}
+              <div className="row justify-content-center mt-5">
+                <div className="col-lg-6">
+                  <div className="rounded text-center pricing-table table-4">
+                    <h3>Ready to Start?</h3>
+                    <p>Kickstart your journey with us by filling out a quick form to get to know you better!</p>
+                    <a id="start-now-btn" className="btn btn-primary ml-lg-3 primary-shadow">Start Now</a>
+                    <div id="form-container" style={{ display: 'none', marginTop: '20px' }}>
+                      <iframe src="https://form.typeform.com/to/m94ft0kb" width="100%" height="500px" style={{ border: 'none' }}></iframe>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Background shapes */}
+        <img className="pricing-bg-shape-1 up-down-animation" src="images/background-shape/seo-ball-1.png" alt="background-shape" />
+        <img className="pricing-bg-shape-2 up-down-animation" src="images/background-shape/seo-half-cycle.png" alt="background-shape" />
+        <img className="pricing-bg-shape-3 left-right-animation" src="images/background-shape/team-bg-triangle.png" alt="background-shape" />
+      </section>
+
       {/* Footer */}
-      <footer className="bg-gray-50 border-t py-8">
-        <div className="container mx-auto px-6 text-center text-color text-sm">
-          Sistema de Autenticación con Supabase &copy; {new Date().getFullYear()} - Todos los derechos reservados
+      <footer className="footer-section footer" style={{ backgroundImage: "url(images/backgrounds/footer-bg.png)" }}>
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-4 text-center text-lg-left mb-4 mb-lg-0">
+              {/* Logo */}
+              <a href="index.html">
+                <img className="img-fluid" src="images/logo.png" alt="logo" />
+              </a>
+            </div>
+          </div>
         </div>
       </footer>
-    </div>
+    </>
   );
 };
 
