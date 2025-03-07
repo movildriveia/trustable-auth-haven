@@ -19,6 +19,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'poppins': ['Poppins', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -74,6 +77,11 @@ export default {
 					700: '#3e39d7',
 					800: '#352fb0',
 					900: '#2e2a8a'
+				},
+				custom: {
+					blue: '#008dec',
+					dark: '#091337',
+					text: '#4d546f',
 				}
 			},
 			borderRadius: {
@@ -97,11 +105,29 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'left-right': {
+					'0%': {
+						transform: 'translateX(0)'
+					},
+					'100%': {
+						transform: 'translateX(-20px)'
+					}
+				},
+				'up-down': {
+					'0%': {
+						transform: 'translateY(0)'
+					},
+					'100%': {
+						transform: 'translateY(-20px)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'left-right': 'left-right 3s ease-in infinite alternate-reverse',
+				'up-down': 'up-down 3s ease-in infinite alternate-reverse'
 			}
 		}
 	},
