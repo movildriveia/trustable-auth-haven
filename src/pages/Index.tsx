@@ -61,12 +61,8 @@ const Index = () => {
         <div className="container mx-auto px-6 relative z-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="text-white">
-              <img 
-                src="/lovable-uploads/82ddc0b6-d4e5-4a0a-a102-0eda212f379c.png" 
-                alt="Nexus FinLabs Logo" 
-                className="h-20 mb-6"
-              />
-              <h1 className="text-5xl md:text-6xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
+              {/* Removed logo here */}
+              <h1 className="text-6xl md:text-7xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
                 FinTech<br/>
                 Observatory
               </h1>
@@ -281,11 +277,8 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex justify-center mb-6 md:mb-0">
-              <img 
-                src="/lovable-uploads/25877594-b9f1-47b1-9b83-99aed8b6cfc7.png" 
-                alt="Nexus FinLabs" 
-                className="h-10"
-              />
+              {/* Removed logo here */}
+              <span className="text-xl font-semibold text-white">Nexus FinLabs</span>
             </div>
             <div className="flex gap-8 mb-6 md:mb-0">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">Home</a>
