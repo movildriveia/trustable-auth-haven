@@ -12,10 +12,10 @@ const ALLOWED_EXTENSIONS = ['.pdf', '.xlsx', '.doc', '.pptx', '.zip'];
 const MAX_FILES = 20;
 
 const DocumentsSection = () => {
-  const [documents, setDocuments] = useState([]);
+  const [documents, setDocuments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [uploadLoading, setUploadLoading] = useState(false);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { getUserDocuments, uploadDocument, deleteDocument, formatFileSize } = useDashboard();
 
   // Load documents on component mount
@@ -37,7 +37,9 @@ const DocumentsSection = () => {
   }, []);
 
   // Handle file selection from the input
-  const handleFileChange = async (e) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    
     const files = Array.from(e.target.files);
     
     if (documents.length + files.length > MAX_FILES) {
@@ -47,7 +49,7 @@ const DocumentsSection = () => {
     
     // Check file extensions
     const invalidFiles = files.filter(file => {
-      const ext = '.' + file.name.split('.').pop().toLowerCase();
+      const ext = '.' + file.name.split('.').pop()?.toLowerCase();
       return !ALLOWED_EXTENSIONS.includes(ext);
     });
     
@@ -82,7 +84,7 @@ const DocumentsSection = () => {
   };
 
   // Handle document deletion
-  const handleDelete = async (id, name) => {
+  const handleDelete = async (id: string, name: string) => {
     if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
       const { success, error } = await deleteDocument(id);
       
@@ -96,7 +98,7 @@ const DocumentsSection = () => {
   };
 
   // Get file icon based on type
-  const getFileIcon = (fileType) => {
+  const getFileIcon = (fileType: string) => {
     if (fileType.includes('pdf')) return <File className="text-red-500" />;
     if (fileType.includes('spreadsheet') || fileType.includes('excel') || fileType.includes('xlsx')) 
       return <File className="text-green-600" />;
