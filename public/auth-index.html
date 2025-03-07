@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>NexusFinLabs - Portal</title>
+
+  <!-- mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- theme meta -->
+  <meta name="theme-name" content="NexusFinLabs" />
+  <meta name="description" content="FinTech Observatory - Client Portal" />
+
+  <!-- ** Plugins Needed for the Project ** -->
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+  <!-- themefy-icon -->
+  <link rel="stylesheet" href="plugins/themify-icons/themify-icons.css">
+  <!-- slick slider -->
+  <link rel="stylesheet" href="plugins/slick/slick.css">
+  <!-- venobox popup -->
+  <link rel="stylesheet" href="plugins/Venobox/venobox.css">
+  <!-- aos -->
+  <link rel="stylesheet" href="plugins/aos/aos.css">
+
+  <!-- Main Stylesheet -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/auth.css" rel="stylesheet">
+
+  <!--Favicon-->
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+
+</head>
+
+<body>
+  <!-- navigation -->
+  <section class="fixed-top navigation">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="index.html"><img src="images/logo.png" alt="logo"></a>
+        <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
+          aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- navbar -->
+        <div class="collapse navbar-collapse text-center" id="navbar">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link page-scroll" href="#pricing">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.html">Contact</a>
+            </li>
+          </ul>
+          <button id="logout-btn" class="btn btn-primary primary-shadow mr-3" style="display: none;">Logout</button>
+          <button id="login-btn" class="btn btn-secondary primary-shadow">Login</button>
+        </div>
+      </nav>
+    </div>
+  </section>
+  <!-- /navigation -->
+
+  <!-- auth container -->
+  <section class="auth-container section" style="display: none;">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="card rounded shadow">
+            <div class="card-body p-5">
+              <h3 class="text-center mb-4">Account Access</h3>
+              
+              <!-- Login Form -->
+              <form id="login-form" class="auth-form">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Sign In</button>
+                </div>
+                <div class="mt-3 text-center">
+                  <p>Don't have an account? <a href="#" id="show-register">Register</a></p>
+                </div>
+              </form>
+              
+              <!-- Register Form -->
+              <form id="register-form" class="auth-form" style="display: none;">
+                <div class="form-group">
+                  <label for="register-email">Email</label>
+                  <input type="email" class="form-control" id="register-email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                  <label for="register-password">Password</label>
+                  <input type="password" class="form-control" id="register-password" placeholder="Choose a password" required>
+                </div>
+                <div class="form-group">
+                  <label for="full-name">Full Name</label>
+                  <input type="text" class="form-control" id="full-name" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                  <label for="company">Company</label>
+                  <input type="text" class="form-control" id="company" placeholder="Enter your company name">
+                </div>
+                <div class="form-group">
+                  <label for="position">Position</label>
+                  <input type="text" class="form-control" id="position" placeholder="Enter your position">
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+                <div class="mt-3 text-center">
+                  <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /auth container -->
+
+  <!-- dashboard container -->
+  <section id="dashboard-container" class="section" style="display: none;">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <h2 class="section-title text-center">Welcome to Your Dashboard</h2>
+          <div class="user-info mb-4">
+            <h4 id="user-greeting">Hello!</h4>
+            <p id="user-email"></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card rounded shadow mb-4">
+            <div class="card-body">
+              <h4 class="card-title">Profile Information</h4>
+              <div id="profile-info">
+                <div class="profile-item">
+                  <strong>Name:</strong> <span id="display-name"></span>
+                </div>
+                <div class="profile-item">
+                  <strong>Company:</strong> <span id="display-company"></span>
+                </div>
+                <div class="profile-item">
+                  <strong>Position:</strong> <span id="display-position"></span>
+                </div>
+              </div>
+              <button id="edit-profile-btn" class="btn btn-secondary mt-3">Edit Profile</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="card rounded shadow mb-4">
+            <div class="card-body">
+              <h4 class="card-title">Activity</h4>
+              <p>Your recent activity will appear here.</p>
+              <div id="activity-feed">
+                <div class="activity-item">
+                  <i class="ti-user"></i>
+                  <span>Welcome to NexusFinLabs Portal!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Profile Form (Hidden by default) -->
+      <div id="edit-profile-container" class="row justify-content-center" style="display: none;">
+        <div class="col-lg-6">
+          <div class="card rounded shadow">
+            <div class="card-body p-4">
+              <h4 class="card-title">Edit Profile</h4>
+              <form id="edit-profile-form">
+                <div class="form-group">
+                  <label for="edit-name">Full Name</label>
+                  <input type="text" class="form-control" id="edit-name" required>
+                </div>
+                <div class="form-group">
+                  <label for="edit-company">Company</label>
+                  <input type="text" class="form-control" id="edit-company">
+                </div>
+                <div class="form-group">
+                  <label for="edit-position">Position</label>
+                  <input type="text" class="form-control" id="edit-position">
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                  <button type="button" id="cancel-edit" class="btn btn-secondary ml-2">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /dashboard container -->
+
+  <!-- welcome section visible to non-logged in users -->
+  <section id="welcome-section" class="hero-section hero" data-background="" style="background-image: url(images/hero-area/banner-bg.png);">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center zindex-1">
+          <h1 class="mb-3">Client Portal<br>Access</h1>
+          <p class="mb-4">
+            Welcome to the NexusFinLabs client portal.<br>
+            Please log in to access your dashboard.
+          </p>
+          <button id="welcome-login-btn" class="btn btn-secondary btn-lg">Login Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- background shapes -->
+    <div id="scene">
+      <img class="img-fluid hero-bg-1 up-down-animation" src="images/background-shape/feature-bg-2.png" alt="">
+      <img class="img-fluid hero-bg-2 left-right-animation" src="images/background-shape/seo-ball-1.png" alt="">
+      <img class="img-fluid hero-bg-3 left-right-animation" src="images/background-shape/seo-half-cycle.png" alt="">
+      <img class="img-fluid hero-bg-4 up-down-animation" src="images/background-shape/green-dot.png" alt="">
+      <img class="img-fluid hero-bg-5 left-right-animation" src="images/background-shape/blue-half-cycle.png" alt="">
+      <img class="img-fluid hero-bg-6 up-down-animation" src="images/background-shape/seo-ball-1.png" alt="">
+    </div>
+  </section>
+  <!-- /welcome section -->
+
+  <!-- footer -->
+  <footer class="footer-section footer" style="background-image: url(images/backgrounds/footer-bg.png);">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 text-center text-lg-left mb-4 mb-lg-0">
+          <!-- logo-->
+          <a href="index.html">
+            <img class="img-fluid" src="images/logo.png" alt="logo">
+          </a>
+        </div>
+        <div class="col-lg-8 text-center text-lg-right">
+          <p class="mb-0 text-white">&copy; 2023 NexusFinLabs. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast notification component -->
+  <div id="toast" class="toast-notification">
+    <div class="toast-content">
+      <span id="toast-message">Notification message</span>
+    </div>
+  </div>
+
+  <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+
+  <!-- jQuery -->
+  <script src="plugins/jQuery/jquery.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="plugins/bootstrap/bootstrap.min.js"></script>
+  <!-- slick slider -->
+  <script src="plugins/slick/slick.min.js"></script>
+  <!-- venobox -->
+  <script src="plugins/Venobox/venobox.min.js"></script>
+  <!-- aos -->
+  <script src="plugins/aos/aos.js"></script>
+  
+  <!-- Supabase JS -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  
+  <!-- App Scripts -->
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
