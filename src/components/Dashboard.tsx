@@ -1,9 +1,9 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import DashboardLayout from "./dashboard/DashboardLayout";
 import DocumentsSection from "./dashboard/DocumentsSection";
+import DocumentsContainer from "./DocumentsContainer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Shield, User, Clock, Key, LogOut, LayoutDashboard } from "lucide-react";
@@ -14,10 +14,17 @@ import { es } from "date-fns/locale";
 const Dashboard = () => {
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
-  const { getUserProfile } = useDashboard();
+  const { getUserProfile, updateProfile } = useDashboard();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    company_name: "",
+  });
+  const [errors, setErrors] = useState({});
+
   useEffect(() => {
     const checkAuth = async () => {
       const authenticated = await isAuthenticated();
@@ -27,15 +34,27 @@ const Dashboard = () => {
         loadUserProfile();
       }
     };
-    
+
     checkAuth();
   }, [navigate, isAuthenticated]);
+
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        first_name: profile.first_name,
+        last_name: profile.last_name,
+        company_name: profile.company_name,
+      });
+    }
+  }, [profile]);
 
   const loadUserProfile = async () => {
     setLoading(true);
     const { profile, error } = await getUserProfile();
     if (profile) {
       setProfile(profile);
+    } else if (error) {
+      console.error("Error loading profile:", error);
     }
     setLoading(false);
   };
@@ -45,138 +64,87 @@ const Dashboard = () => {
     navigate("/login");
   };
 
-  const handleEditProfile = () => {
-    navigate("/dashboard/profile");
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.first_name) newErrors.first_name = "First name is required";
+    if (!formData.last_name) newErrors.last_name = "Last name is required";
+    if (!formData.company_name) newErrors.company_name = "Company name is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSaveProfile = async () => {
+    if (!validateForm()) return;
+
+    const { success, error } = await updateProfile(formData);
+    if (success) {
+      setIsEditing(false);
+      loadUserProfile(); // Recargar el perfil para reflejar los cambios
+    } else {
+      console.error("Error updating profile:", error);
+    }
   };
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-custom-dark">Panel de Control</h1>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2 rounded-md border border-gray-300" 
-            onClick={handleLogout}
-          >
-            <LogOut size={16} />
-            Cerrar Sesión
-          </Button>
-        </div>
-
-        <Card className="mb-6 border border-gray-200">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <Shield className="h-6 w-6 text-gray-800" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-semibold text-custom-dark mb-6">Profile Overview</h2>
+            {isEditing ? (
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  value={formData.first_name}
+                  onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                  placeholder="First Name"
+                  className={`w-full p-2 border rounded ${errors.first_name ? "border-red-500" : ""}`}
+                />
+                {errors.first_name && <p className="text-red-500 text-sm">{errors.first_name}</p>}
+                <input
+                  type="text"
+                  value={formData.last_name}
+                  onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                  placeholder="Last Name"
+                  className={`w-full p-2 border rounded ${errors.last_name ? "border-red-500" : ""}`}
+                />
+                {errors.last_name && <p className="text-red-500 text-sm">{errors.last_name}</p>}
+                <input
+                  type="text"
+                  value={formData.company_name}
+                  onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+                  placeholder="Company Name"
+                  className={`w-full p-2 border rounded ${errors.company_name ? "border-red-500" : ""}`}
+                />
+                {errors.company_name && <p className="text-red-500 text-sm">{errors.company_name}</p>}
+                <button
+                  onClick={handleSaveProfile}
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  Save Changes
+                </button>
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="bg-gray-500 text-white px-4 py-2 rounded ml-2"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
               <div>
-                <h2 className="text-lg font-semibold text-custom-dark">Área Segura</h2>
-                <p className="text-gray-600">Esta página solo es accesible para usuarios autenticados</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Perfil de Usuario */}
-          <Card className="border border-gray-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xl font-semibold text-custom-dark">Perfil de Usuario</CardTitle>
-              <CardDescription>Información de tu cuenta</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center mb-6">
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-2">
-                  <User className="h-10 w-10 text-gray-500" />
-                </div>
-              </div>
-              
-              {loading ? (
-                <p>Cargando información...</p>
-              ) : profile ? (
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">Nombre:</h3>
-                    <p className="font-semibold">{profile.first_name} {profile.last_name}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">Email:</h3>
-                    <p className="font-semibold">{profile.email}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">Miembro desde:</h3>
-                    <p className="font-semibold">{profile.created_at ? format(new Date(profile.created_at), 'dd/MM/yyyy', { locale: es }) : 'N/A'}</p>
-                  </div>
-                </div>
-              ) : (
-                <p>No se pudo cargar la información del perfil</p>
-              )}
-              
-              <div className="mt-6">
-                <Button 
-                  onClick={handleEditProfile} 
-                  variant="outline" 
-                  className="w-full border border-gray-300"
+                <p>First Name: {profile?.first_name}</p>
+                <p>Last Name: {profile?.last_name}</p>
+                <p>Company Name: {profile?.company_name}</p>
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
                 >
                   Editar Perfil
-                </Button>
+                </button>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Actividad Reciente */}
-          <Card className="border border-gray-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xl font-semibold text-custom-dark">Actividad Reciente</CardTitle>
-              <CardDescription>Últimas acciones en la plataforma</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="py-3 border-b border-gray-200">
-                  <h3 className="font-medium text-custom-dark">Inicio de sesión</h3>
-                  <p className="text-sm text-gray-500">Hace 5 minutos</p>
-                </div>
-                <div className="py-3 border-b border-gray-200">
-                  <h3 className="font-medium text-custom-dark">Actualización de perfil</h3>
-                  <p className="text-sm text-gray-500">Ayer</p>
-                </div>
-                <div className="py-3">
-                  <h3 className="font-medium text-custom-dark">Cambio de contraseña</h3>
-                  <p className="text-sm text-gray-500">Hace 3 días</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Ajustes de Seguridad */}
-          <Card className="border border-gray-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xl font-semibold text-custom-dark">Ajustes de Seguridad</CardTitle>
-              <CardDescription>Gestiona las opciones de seguridad de tu cuenta</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Button 
-                variant="outline" 
-                className="w-full justify-start gap-2 border border-gray-300 hover:bg-gray-50"
-              >
-                <Shield className="h-4 w-4" />
-                Activar autenticación de dos factores
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start gap-2 border border-gray-300 hover:bg-gray-50"
-              >
-                <Key className="h-4 w-4" />
-                Cambiar contraseña
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start gap-2 border border-gray-300 hover:bg-gray-50"
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                Revisar dispositivos conectados
-              </Button>
-            </CardContent>
-          </Card>
+            )}
+          </div>
+          <DocumentsContainer />
         </div>
 
         <DocumentsSection />
