@@ -22,6 +22,9 @@ const buttonVariants = cva(
         lime: "bg-[#d3fc71] text-custom-dark font-medium hover:shadow-md hover:scale-[1.02] hover:brightness-[1.05]",
         modern: "bg-white border border-gray-200 text-slate-900 hover:border-blue-400 hover:text-blue-600 hover:shadow-md",
         glass: "bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-white/20 hover:shadow-md",
+        // Add new variants for the login/register buttons with inverse hover effects
+        loginBtn: "bg-white text-custom-dark border border-gray-300 hover:bg-[#17ffd3] hover:text-custom-dark hover:border-transparent hover:shadow-md min-w-[100px] justify-center",
+        registerBtn: "bg-[#17ffd3] text-custom-dark border border-transparent hover:bg-white hover:text-custom-dark hover:border-gray-300 hover:shadow-md min-w-[100px] justify-center",
       },
       size: {
         default: "h-8 px-4 py-1",

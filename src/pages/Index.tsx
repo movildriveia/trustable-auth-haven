@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, ChevronRight, BarChart3, LightbulbIcon, GanttChartSquare } from "lucide-react";
+import ProductsDropdown from "@/components/ProductsDropdown";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -21,23 +22,22 @@ const Index = () => {
           <div className="flex items-center gap-8">
             <nav className="hidden md:flex items-center gap-8 mr-8">
               <a href="#" className="text-custom-dark hover:text-primary-custom transition-colors font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all">Home</a>
+              <ProductsDropdown />
               <a href="#services" className="text-custom-dark hover:text-primary-custom transition-colors font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all">Services</a>
               <a href="#contact" className="text-custom-dark hover:text-primary-custom transition-colors font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all">Contact</a>
             </nav>
             <div className="flex gap-3">
               <Button 
-                variant="outline"
+                variant="loginBtn"
                 size="sm"
                 onClick={() => navigate("/login")}
-                className="font-medium border-gray-300 hover:text-blue-600 hover:border-blue-600"
               >
                 Login
               </Button>
               <Button 
-                variant="blue"
+                variant="registerBtn"
                 size="sm"
                 onClick={() => navigate("/register")}
-                className="font-medium"
               >
                 Register
               </Button>
@@ -77,18 +77,15 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
                   onClick={() => navigate("/register")}
-                  variant="gradient"
-                  size="default"
-                  className="group"
+                  className="bg-gradient-to-r from-[#17ffd3] to-[#d3fc71] text-custom-dark min-w-[120px] justify-center hover:bg-white hover:text-custom-dark border hover:border-[#17ffd3] group"
                 >
                   Get Started
                   <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
                 <Button 
                   onClick={() => navigate("/login")}
+                  className="bg-transparent border-white/30 text-white min-w-[120px] justify-center hover:bg-[#17ffd3] hover:border-transparent hover:text-custom-dark"
                   variant="outline"
-                  size="default"
-                  className="bg-transparent border-white/30 hover:bg-white/10 text-white"
                 >
                   Login
                 </Button>
@@ -177,7 +174,7 @@ const Index = () => {
           
           <div className="mt-12 text-center">
             <Button 
-              variant="blue"
+              variant="registerBtn"
               size="lg"
               onClick={() => navigate("/register")}
               className="px-10"
