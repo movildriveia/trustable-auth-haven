@@ -1,12 +1,21 @@
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Use the provided credentials
-const supabaseUrl = 'https://vlodrwaarjwhzjnrezcs.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZsb2Ryd2Fhcmp3aHpqbnJlemNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzMDE1MTIsImV4cCI6MjA1Njg3NzUxMn0.CMtmJkw25zQ52UXQugpQgWO3JRs8dvM_A2m07qGRt5c';
+// Use environment variables with fallbacks to the existing credentials
+const supabaseUrl: string = import.meta.env.VITE_SUPABASE_URL || 'https://vlodrwaarjwhzjnrezcs.supabase.co';
+const supabaseAnonKey: string = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZsb2Ryd2Fhcmp3aHpqbnJlemNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzMDE1MTIsImV4cCI6MjA1Njg3NzUxMn0.CMtmJkw25zQ52UXQugpQgWO3JRs8dvM_A2m07qGRt5c';
 
-// Create the Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create the Supabase client with additional configuration
+export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+});
+
+// Log connection status for debugging
+console.log('Supabase client initialized');
 
 // Sign-up function with simplified profile handling
 export async function signUpWithEmail(email: string, password: string, metadata: any = {}) {
