@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase, signUpWithEmail, signInWithEmail, signOut, getUser, getSession } from "./supabase";
@@ -27,8 +26,33 @@ export const useAuth = () => {
       const { data, error } = await signInWithEmail(email, password);
       
       if (error) {
+        // Check if this is an email verification error
+        if (error.message.includes("Email not confirmed") || error.message.includes("email not confirmed")) {
+          toast.error("Please verify your email before logging in");
+          return { success: false, error: { message: "Email not confirmed" } };
+        }
+        
         toast.error(`Login error: ${error.message}`);
         return { success: false, error };
+      }
+      
+      // Check if email is verified by querying the profile
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('email_verified')
+        .eq('id', data.user.id)
+        .single();
+      
+      if (profileError) {
+        toast.error(`Profile error: ${profileError.message}`);
+        return { success: false, error: profileError };
+      }
+      
+      if (!profileData.email_verified) {
+        // Sign out the user if email is not verified
+        await signOut();
+        toast.error("Please verify your email before logging in");
+        return { success: false, error: { message: "Email not confirmed" } };
       }
       
       toast.success("Login successful!");

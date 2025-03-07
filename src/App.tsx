@@ -10,6 +10,10 @@ import Index from "./pages/Index";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import DocumentsPage from "./pages/dashboard/DocumentsPage";
+import SettingsPage from "./pages/dashboard/SettingsPage";
+import ProfilePage from "./pages/dashboard/ProfilePage";
+import HelpPage from "./pages/dashboard/HelpPage";
 import NotFound from "./pages/NotFound";
 
 // Create a new QueryClient instance
@@ -43,7 +47,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const App = () => {
   console.log("App rendering");
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 22c1e55929d34468fcb6add04f271bedcd70bcda
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -54,14 +62,54 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/signup" element={<RegisterPage />} />
+<<<<<<< HEAD
           <Route
             path="/dashboard"
+=======
+          
+          {/* Dashboard Routes */}
+          <Route 
+            path="/dashboard" 
+>>>>>>> 22c1e55929d34468fcb6add04f271bedcd70bcda
             element={
               <ProtectedRoute>
                 <DashboardPage />
               </ProtectedRoute>
             }
           />
+          <Route 
+            path="/dashboard/documents" 
+            element={
+              <ProtectedRoute>
+                <DocumentsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/settings" 
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/profile" 
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/dashboard/help" 
+            element={
+              <ProtectedRoute>
+                <HelpPage />
+              </ProtectedRoute>
+            } 
+          />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </TooltipProvider>

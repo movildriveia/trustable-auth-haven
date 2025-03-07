@@ -1,14 +1,14 @@
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { useDashboard, UserProfile } from "@/lib/dashboard";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
+import DashboardLayout from "./dashboard/DashboardLayout";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { logout, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { getUserProfile } = useDashboard();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,10 +41,6 @@ const Dashboard = () => {
     checkAuth();
   }, [navigate]);
 
-  const handleLogout = async () => {
-    await logout();
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -56,64 +52,79 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-custom-dark">Nexus FinLabs Dashboard</h1>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="text-sm text-gray-500">Welcome,</p>
-              <p className="font-medium">{profile?.first_name} {profile?.last_name}</p>
-            </div>
-            <Button variant="outline" onClick={handleLogout}>Logout</Button>
-          </div>
-        </div>
-      </header>
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-6">Dashboard Overview</h2>
+    <DashboardLayout>
+      <div className="space-y-6">
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-xl font-semibold text-custom-dark mb-6">Dashboard Overview</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-lg shadow-sm">
-              <h3 className="text-lg font-medium text-blue-900 mb-2">Profile</h3>
-              <p className="text-sm text-blue-800 mb-4">Your account information</p>
-              <Button 
-                variant="gradient" 
-                className="text-sm" 
-                onClick={() => navigate("/profile")}
-              >
-                View Profile
-              </Button>
+              <h3 className="text-lg font-medium text-blue-900">Welcome Back</h3>
+              <p className="text-blue-800 mt-2">{profile?.first_name} {profile?.last_name}</p>
             </div>
             
             <div className="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-lg shadow-sm">
-              <h3 className="text-lg font-medium text-green-900 mb-2">Documents</h3>
-              <p className="text-sm text-green-800 mb-4">Manage your uploads</p>
-              <Button 
-                variant="blue" 
-                className="text-sm" 
-                onClick={() => navigate("/documents")}
-              >
-                View Documents
-              </Button>
+              <h3 className="text-lg font-medium text-green-900">Documents</h3>
+              <div className="flex justify-between items-end mt-2">
+                <p className="text-2xl font-bold text-green-800">0</p>
+                <p className="text-sm text-green-700">Uploaded Files</p>
+              </div>
             </div>
             
             <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-6 rounded-lg shadow-sm">
-              <h3 className="text-lg font-medium text-purple-900 mb-2">Settings</h3>
-              <p className="text-sm text-purple-800 mb-4">Configure your account</p>
-              <Button 
-                variant="reverseGradient" 
-                className="text-sm" 
-                onClick={() => navigate("/settings")}
-              >
-                View Settings
-              </Button>
+              <h3 className="text-lg font-medium text-purple-900">AI Services</h3>
+              <div className="flex justify-between items-end mt-2">
+                <p className="text-2xl font-bold text-purple-800">3</p>
+                <p className="text-sm text-purple-700">Available</p>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-r from-amber-50 to-amber-100 p-6 rounded-lg shadow-sm">
+              <h3 className="text-lg font-medium text-amber-900">Last Login</h3>
+              <p className="text-amber-800 mt-2">{new Date().toLocaleDateString()}</p>
             </div>
           </div>
         </div>
-      </main>
-    </div>
+        
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-xl font-semibold text-custom-dark mb-6">Quick Actions</h2>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <button
+              onClick={() => navigate("/dashboard/documents")}
+              className="bg-white border border-gray-200 rounded-lg p-4 text-left hover:shadow-md transition-shadow"
+            >
+              <h3 className="font-medium text-custom-dark">Upload Documents</h3>
+              <p className="text-sm text-gray-500 mt-1">Manage your documents and files</p>
+            </button>
+            
+            <button
+              onClick={() => navigate("/dashboard/settings")}
+              className="bg-white border border-gray-200 rounded-lg p-4 text-left hover:shadow-md transition-shadow"
+            >
+              <h3 className="font-medium text-custom-dark">Configure AI</h3>
+              <p className="text-sm text-gray-500 mt-1">Set up your AI service preferences</p>
+            </button>
+            
+            <button
+              onClick={() => navigate("/dashboard/profile")}
+              className="bg-white border border-gray-200 rounded-lg p-4 text-left hover:shadow-md transition-shadow"
+            >
+              <h3 className="font-medium text-custom-dark">Edit Profile</h3>
+              <p className="text-sm text-gray-500 mt-1">Update your account information</p>
+            </button>
+            
+            <button
+              onClick={() => navigate("/dashboard/help")}
+              className="bg-white border border-gray-200 rounded-lg p-4 text-left hover:shadow-md transition-shadow"
+            >
+              <h3 className="font-medium text-custom-dark">Get Help</h3>
+              <p className="text-sm text-gray-500 mt-1">Contact support or browse FAQs</p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
   );
 };
 
