@@ -29,7 +29,7 @@ const ProductsDropdown = ({ className }: ProductsDropdownProps) => {
     <div className={cn("relative products-dropdown", className)}>
       <button 
         onClick={toggleDropdown}
-        className="text-custom-dark hover:text-primary-custom transition-colors font-medium flex items-center gap-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all"
+        className="hover:text-[#17ffd3] transition-colors font-medium flex items-center gap-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all"
       >
         Products <ChevronDown className="h-4 w-4" />
       </button>

@@ -2,7 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, ChevronRight, BarChart3, LightbulbIcon, GanttChartSquare } from "lucide-react";
+import { ExternalLink, ChevronRight } from "lucide-react";
 import ProductsDropdown from "@/components/ProductsDropdown";
 
 const Index = () => {
@@ -10,10 +10,20 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col font-poppins overflow-x-hidden">
-      {/* Header */}
-      <header className="bg-white/90 backdrop-blur-sm py-4 px-6 shadow-sm sticky top-0 z-50">
+      {/* Full-width gradient background */}
+      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-slate-900 to-blue-950 z-0">
+        <img
+          src="/lovable-uploads/483b237a-7371-4738-8d3b-f4c377e50673.png"
+          alt="Background"
+          className="w-full h-full object-cover opacity-60"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 to-slate-900/60"></div>
+      </div>
+      
+      {/* Header (now transparent) */}
+      <header className="py-4 px-6 sticky top-0 z-50 bg-transparent backdrop-blur-sm">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold text-custom-dark flex items-center gap-3">
+          <div className="text-2xl font-bold text-white flex items-center gap-3">
             <img 
               src="/lovable-uploads/cef7b659-e171-45b6-ab88-91595b5a7ffd.png" 
               alt="Nexus FinLabs" 
@@ -22,10 +32,10 @@ const Index = () => {
           </div>
           <div className="flex items-center gap-8">
             <nav className="hidden md:flex items-center gap-8 mr-8">
-              <a href="#" className="text-custom-dark hover:text-primary-custom transition-colors font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all">Home</a>
-              <ProductsDropdown />
-              <a href="#services" className="text-custom-dark hover:text-primary-custom transition-colors font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all">Services</a>
-              <a href="#contact" className="text-custom-dark hover:text-primary-custom transition-colors font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all">Contact</a>
+              <a href="#" className="text-white hover:text-[#17ffd3] transition-colors font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all">Home</a>
+              <ProductsDropdown className="text-white" />
+              <a href="#services" className="text-white hover:text-[#17ffd3] transition-colors font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all">Services</a>
+              <a href="#contact" className="text-white hover:text-[#17ffd3] transition-colors font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all">Contact</a>
             </nav>
             <div className="flex gap-3">
               <Button 
@@ -48,17 +58,7 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="flex-grow flex items-center py-20 relative overflow-hidden bg-gradient-to-br from-slate-900 to-blue-950">
-        {/* Background Image */}
-        <div className="absolute inset-0 w-full h-full">
-          <img
-            src="/lovable-uploads/483b237a-7371-4738-8d3b-f4c377e50673.png"
-            alt="Background"
-            className="w-full h-full object-cover opacity-60"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 to-slate-900/60"></div>
-        </div>
-
+      <section className="flex-grow flex items-center py-20 relative overflow-hidden z-10">
         <div className="container mx-auto px-6 relative z-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="text-white">
@@ -96,7 +96,7 @@ const Index = () => {
               <div className="glass-card p-8 rounded-lg border border-white/20 shadow-xl relative">
                 <h3 className="text-white text-xl font-semibold mb-6 text-center">Financial Features</h3>
                 
-                <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                <div className="grid grid-cols-2 gap-6">
                   {/* First Row */}
                   <div className="col-span-1">
                     <div className="flex items-start mb-4">
@@ -196,7 +196,7 @@ const Index = () => {
       </section>
 
       {/* Ready to Start Section */}
-      <section id="services" className="py-20 bg-white">
+      <section id="services" className="py-20 bg-white z-10 relative">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-custom-dark">Ready to Start?</h2>
@@ -208,25 +208,16 @@ const Index = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-8 border border-gray-100 hover:border-blue-100 group text-center">
-              <div className="mx-auto w-16 h-16 mb-6 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] transition-all">
-                <BarChart3 className="h-8 w-8 text-blue-500 group-hover:text-blue-900" />
-              </div>
               <h3 className="text-xl font-semibold mb-3 text-custom-dark">Data Analysis</h3>
               <p className="text-gray-600">Access advanced financial data analysis with intuitive visualizations.</p>
             </div>
             
             <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-8 border border-gray-100 hover:border-blue-100 group text-center">
-              <div className="mx-auto w-16 h-16 mb-6 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] transition-all">
-                <LightbulbIcon className="h-8 w-8 text-blue-500 group-hover:text-blue-900" />
-              </div>
               <h3 className="text-xl font-semibold mb-3 text-custom-dark">Smart Insights</h3>
               <p className="text-gray-600">AI-powered recommendations tailored to your financial goals.</p>
             </div>
             
             <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-8 border border-gray-100 hover:border-blue-100 group text-center">
-              <div className="mx-auto w-16 h-16 mb-6 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] transition-all">
-                <GanttChartSquare className="h-8 w-8 text-blue-500 group-hover:text-blue-900" />
-              </div>
               <h3 className="text-xl font-semibold mb-3 text-custom-dark">M&A Valuations</h3>
               <p className="text-gray-600">Expert analysis and valuation for mergers and acquisitions.</p>
             </div>
@@ -246,7 +237,7 @@ const Index = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-gray-50">
+      <section id="contact" className="py-20 bg-gray-50 z-10 relative">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-custom-dark">Contact Us</h2>
@@ -258,11 +249,6 @@ const Index = () => {
           
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center border border-gray-100 hover:border-blue-100">
-              <div className="w-14 h-14 mx-auto mb-4 bg-blue-50 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
               <h3 className="text-xl font-semibold mb-2 text-custom-dark">Email Us</h3>
               <p className="text-gray-600 mb-4">Send us an email with your questions or requirements.</p>
               <Button variant="turquoise" size="sm" className="group">
@@ -272,11 +258,6 @@ const Index = () => {
             </div>
             
             <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center border border-gray-100 hover:border-blue-100">
-              <div className="w-14 h-14 mx-auto mb-4 bg-blue-50 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-              </div>
               <h3 className="text-xl font-semibold mb-2 text-custom-dark">Call Us</h3>
               <p className="text-gray-600 mb-4">Schedule a call to discuss your project.</p>
               <Button variant="gradient" size="sm" className="group">
@@ -286,12 +267,6 @@ const Index = () => {
             </div>
             
             <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center border border-gray-100 hover:border-blue-100">
-              <div className="w-14 h-14 mx-auto mb-4 bg-blue-50 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
               <h3 className="text-xl font-semibold mb-2 text-custom-dark">Visit Us</h3>
               <p className="text-gray-600 mb-4">Our offices are open Monday to Friday.</p>
               <Button variant="blue" size="sm" className="group">
@@ -304,7 +279,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-10">
+      <footer className="bg-slate-900 text-white py-10 z-10 relative">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex justify-center mb-6 md:mb-0">
