@@ -2,11 +2,31 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // Types for user metadata and documents
 export interface UserMetadata {
+  // Basic user info
+  full_name?: string;
   first_name?: string;
   last_name?: string;
-  company_name?: string;
   email?: string;
-  full_name?: string;  // Added this field to fix the type error
+  
+  // Company related info
+  company_name?: string;
+  company_description?: string;
+  company_website?: string;
+  company_size?: string;
+  company_industry?: string;
+  
+  // User preferences and settings
+  is_company?: boolean;
+  avatar_url?: string;
+  phone_number?: string;
+  job_title?: string;
+  
+  // Additional metadata
+  timezone?: string;
+  language_preference?: string;
+  account_type?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Document {
@@ -45,7 +65,7 @@ export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKe
 // Log connection status for debugging
 console.log('Supabase client initialized');
 
-// Sign-up function with simplified profile handling
+// Sign-up function with comprehensive profile handling
 export async function signUpWithEmail(email: string, password: string, metadata: UserMetadata = {}) {
   try {
     console.log("Starting signup process with:", { email, metadata });

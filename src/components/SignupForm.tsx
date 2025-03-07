@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Loader2, CheckCircle, Mail } from "lucide-react";
-import { signUpWithEmail } from "@/lib/supabase";
+import { signUpWithEmail, UserMetadata } from "@/lib/supabase";
 
 const signupSchema = z
   .object({
@@ -46,10 +46,20 @@ const SignupForm = () => {
     try {
       console.log("Registering user:", { email: data.email, name: data.fullName });
       
+      // Prepare user metadata
+      const userMetadata: UserMetadata = {
+        full_name: data.fullName,
+        email: data.email,
+        // Parse first and last name from full name
+        first_name: data.fullName.split(" ")[0],
+        last_name: data.fullName.split(" ").slice(1).join(" ") || undefined,
+        created_at: new Date().toISOString(),
+      };
+      
       const { data: userData, error } = await signUpWithEmail(
         data.email, 
         data.password, 
-        { full_name: data.fullName }
+        userMetadata
       );
       
       console.log("Registration response:", { userData, error });
