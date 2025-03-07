@@ -47,11 +47,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const App = () => {
   console.log("App rendering");
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 22c1e55929d34468fcb6add04f271bedcd70bcda
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -62,54 +58,49 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/signup" element={<RegisterPage />} />
-<<<<<<< HEAD
+
+          {/* Dashboard Routes */}
           <Route
             path="/dashboard"
-=======
-          
-          {/* Dashboard Routes */}
-          <Route 
-            path="/dashboard" 
->>>>>>> 22c1e55929d34468fcb6add04f271bedcd70bcda
             element={
               <ProtectedRoute>
                 <DashboardPage />
               </ProtectedRoute>
             }
           />
-          <Route 
-            path="/dashboard/documents" 
+          <Route
+            path="/dashboard/documents"
             element={
               <ProtectedRoute>
                 <DocumentsPage />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/dashboard/settings" 
+          <Route
+            path="/dashboard/settings"
             element={
               <ProtectedRoute>
                 <SettingsPage />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/dashboard/profile" 
+          <Route
+            path="/dashboard/profile"
             element={
               <ProtectedRoute>
                 <ProfilePage />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/dashboard/help" 
+          <Route
+            path="/dashboard/help"
             element={
               <ProtectedRoute>
                 <HelpPage />
               </ProtectedRoute>
-            } 
+            }
           />
-          
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </TooltipProvider>
