@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -22,7 +23,7 @@ const buttonVariants = cva(
         modern: "bg-white border border-gray-200 text-slate-900 hover:border-blue-400 hover:text-blue-600 hover:shadow-md",
         glass: "bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-white/20 hover:shadow-md",
         // Enhanced gradient buttons
-        loginBtn: "bg-white text-custom-dark border border-gray-300 hover:bg-white hover:text-custom-dark hover:border-gray-400 hover:shadow-md min-w-[120px] justify-center",
+        loginBtn: "bg-white text-custom-dark border border-gray-300 hover:bg-[#FEF7CD] hover:text-custom-dark hover:border-gray-400 hover:shadow-md min-w-[120px] justify-center",
         registerBtn: "bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] text-custom-dark border border-transparent hover:shadow-md min-w-[120px] justify-center",
         startNow: "bg-gradient-to-r from-[#17ffd3] to-[#d3fc71] text-custom-dark font-semibold hover:shadow-lg hover:scale-[1.03] hover:brightness-[1.05] min-w-[180px] justify-center px-10 py-6 text-base",
         // New compact register button with teal/green gradient

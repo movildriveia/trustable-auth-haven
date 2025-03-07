@@ -182,7 +182,7 @@ const RegisterForm = () => {
             )}
           />
 
-          <Button type="submit" variant="purple" size="sm" className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700" disabled={isLoading}>
+          <Button type="submit" variant="startNow" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
