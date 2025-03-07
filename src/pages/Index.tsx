@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, ChevronRight } from "lucide-react";
@@ -6,6 +6,23 @@ import ProductsDropdown from "@/components/ProductsDropdown";
 
 const Index = () => {
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    console.log("Index page component mounted");
+    
+    // Check if any resources are failing to load
+    const handleError = (event) => {
+      console.error("Resource failed to load:", event.target);
+    };
+    
+    window.addEventListener('error', handleError, true);
+    
+    return () => {
+      window.removeEventListener('error', handleError, true);
+    };
+  }, []);
+
+  console.log("Rendering Index page");
 
   return (
     <div className="min-h-screen flex flex-col font-poppins overflow-x-hidden">
@@ -15,6 +32,10 @@ const Index = () => {
           src="/lovable-uploads/483b237a-7371-4738-8d3b-f4c377e50673.png"
           alt="Background"
           className="w-full h-full object-cover opacity-60"
+          onError={(e) => {
+            console.error("Background image failed to load");
+            e.target.style.display = "none";
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 to-slate-900/60"></div>
       </div>
@@ -51,7 +72,7 @@ const Index = () => {
           </div>
         </div>
       </header>
-
+      
       {/* Hero Section */}
       <section className="flex-grow flex items-center py-20 relative overflow-hidden z-10">
         <div className="container mx-auto px-6 relative z-20">

@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { isAuthenticated } from "@/lib/auth";
 
 import Index from "./pages/Index";
+import SimpleIndex from "./pages/SimpleIndex";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -43,13 +44,24 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => {
+  const [useSimpleIndex, setUseSimpleIndex] = useState(true);
+  
+  useEffect(() => {
+    // Try to load the full index after a delay
+    setTimeout(() => {
+      setUseSimpleIndex(false);
+    }, 2000);
+  }, []);
+  
+  console.log("App rendering, using simple index:", useSimpleIndex);
+  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={useSimpleIndex ? <SimpleIndex /> : <Index />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/signup" element={<RegisterPage />} />
