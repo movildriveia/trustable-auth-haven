@@ -5,10 +5,12 @@ import { supabase } from "./supabase";
 // Interface for user profile
 export interface UserProfile {
   id: string;
+  email: string; // Changed to required to match ProfileSection usage
   first_name?: string;
   last_name?: string;
   company_name?: string;
-  email?: string;
+  company_description?: string; // Added this field
+  company_website?: string;
   created_at?: string;
   updated_at?: string;
   doc_count?: number;
