@@ -3,14 +3,26 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useDashboard, UserProfile } from "@/lib/dashboard";
+import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+
+interface UserProfile {
+  id: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  company_name?: string;
+  company_description?: string;
+  company_website?: string;
+  doc_count?: number;
+  created_at?: string;
+  updated_at?: string;
+}
 
 const ProfileSection = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const { getUserProfile, updateUserProfile } = useDashboard();
 
   useEffect(() => {
     loadProfile();
@@ -18,18 +30,38 @@ const ProfileSection = () => {
 
   const loadProfile = async () => {
     setLoading(true);
-    const { profile, error } = await getUserProfile();
     
-    if (error) {
-      toast.error("Failed to load profile");
-    } else if (profile) {
-      setProfile(profile);
+    try {
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !sessionData.session) {
+        toast.error("No active session");
+        setLoading(false);
+        return;
+      }
+      
+      const userId = sessionData.session.user.id;
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      
+      if (error) {
+        toast.error(`Failed to load profile: ${error.message}`);
+      } else if (data) {
+        setProfile(data);
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred");
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!profile) return;
     
     setProfile({
@@ -45,19 +77,47 @@ const ProfileSection = () => {
     
     setSaving(true);
     
-    const { success, error } = await updateUserProfile({
-      first_name: profile.first_name,
-      last_name: profile.last_name,
-      company_name: profile.company_name,
-    });
-    
-    if (success) {
-      toast.success("Profile updated successfully");
-    } else if (error) {
-      toast.error(`Failed to update profile: ${error.message}`);
+    try {
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !sessionData.session) {
+        toast.error("No active session");
+        setSaving(false);
+        return;
+      }
+      
+      const userId = sessionData.session.user.id;
+      
+      // Ensure user can only modify their own profile
+      if (userId !== profile.id) {
+        toast.error("You can only modify your own profile");
+        setSaving(false);
+        return;
+      }
+      
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          first_name: profile.first_name,
+          last_name: profile.last_name,
+          company_name: profile.company_name,
+          company_description: profile.company_description,
+          company_website: profile.company_website,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', userId);
+      
+      if (error) {
+        toast.error(`Failed to update profile: ${error.message}`);
+      } else {
+        toast.success("Profile updated successfully");
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred");
+      console.error(err);
+    } finally {
+      setSaving(false);
     }
-    
-    setSaving(false);
   };
 
   if (loading) {
@@ -110,6 +170,30 @@ const ProfileSection = () => {
         </div>
         
         <div className="space-y-2">
+          <Label htmlFor="company_description">Company Description</Label>
+          <textarea
+            id="company_description"
+            name="company_description"
+            value={profile?.company_description || ""}
+            onChange={handleChange}
+            placeholder="Brief description of your company"
+            className="w-full h-24 px-3 py-2 text-base text-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="company_website">Company Website</Label>
+          <Input
+            id="company_website"
+            name="company_website"
+            type="url"
+            value={profile?.company_website || ""}
+            onChange={handleChange}
+            placeholder="https://example.com"
+          />
+        </div>
+        
+        <div className="space-y-2">
           <Label htmlFor="email">Email Address</Label>
           <Input
             id="email"
@@ -120,6 +204,33 @@ const ProfileSection = () => {
             className="bg-gray-100"
           />
           <p className="text-xs text-gray-500">Email cannot be changed</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="doc_count">Document Count</Label>
+            <Input
+              id="doc_count"
+              name="doc_count"
+              value={profile?.doc_count || 0}
+              disabled
+              readOnly
+              className="bg-gray-100"
+            />
+            <p className="text-xs text-gray-500">This is updated automatically</p>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="created_at">Account Created</Label>
+            <Input
+              id="created_at"
+              name="created_at"
+              value={profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : ""}
+              disabled
+              readOnly
+              className="bg-gray-100"
+            />
+          </div>
         </div>
         
         <div className="pt-4">
