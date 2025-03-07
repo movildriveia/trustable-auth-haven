@@ -1,8 +1,11 @@
 
 -- Drop existing tables if they exist (in reverse order of dependencies)
-DROP TABLE IF EXISTS document_permissions;
-DROP TABLE IF EXISTS documents;
-DROP TABLE IF EXISTS profiles;
+-- Use CASCADE to also drop dependent objects
+DROP TABLE IF EXISTS document_permissions CASCADE;
+DROP TABLE IF EXISTS document_logs CASCADE;
+DROP VIEW IF EXISTS user_documents CASCADE;
+DROP TABLE IF EXISTS documents CASCADE;
+DROP TABLE IF EXISTS profiles CASCADE;
 
 -- Extension for generating UUIDs
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -39,6 +42,18 @@ CREATE TABLE IF NOT EXISTS documents (
   FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
 );
 
+-- Create a document logs table to track document activities
+CREATE TABLE IF NOT EXISTS document_logs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  document_id UUID NOT NULL,
+  user_id UUID NOT NULL,
+  action_type TEXT NOT NULL,
+  action_details JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
+);
+
 -- Create a table to track document access permissions
 CREATE TABLE IF NOT EXISTS document_permissions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -52,9 +67,21 @@ CREATE TABLE IF NOT EXISTS document_permissions (
   UNIQUE(document_id, user_id)
 );
 
+-- Create a view to show user documents with additional info
+CREATE OR REPLACE VIEW user_documents AS
+SELECT 
+  d.*,
+  p.full_name as owner_name,
+  p.email as owner_email
+FROM 
+  documents d
+JOIN 
+  profiles p ON d.user_id = p.id;
+
 -- Enable Row Level Security
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE document_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE document_permissions ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for profiles
@@ -82,6 +109,22 @@ CREATE POLICY "Users can update their own documents"
 CREATE POLICY "Users can delete their own documents"
   ON documents FOR DELETE
   USING (auth.uid() = user_id);
+
+-- Create policies for document_logs
+CREATE POLICY "Users can view logs for their documents"
+  ON document_logs FOR SELECT
+  USING (
+    auth.uid() = user_id OR
+    EXISTS (
+      SELECT 1 FROM documents 
+      WHERE documents.id = document_logs.document_id 
+      AND documents.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Users can insert logs for their actions"
+  ON document_logs FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
 
 -- Create policies for document_permissions
 CREATE POLICY "Users can view document permissions they have access to"
@@ -119,3 +162,4 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
