@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -24,7 +23,6 @@ const Index = () => {
       <header className="py-4 px-6 sticky top-0 z-50 bg-transparent backdrop-blur-sm">
         <div className="container mx-auto flex justify-between items-center">
           <div className="text-2xl font-bold text-white flex items-center gap-3">
-            {/* Logo removed as requested */}
             <span>Nexus FinLabs</span>
           </div>
           <div className="flex items-center gap-8">
@@ -43,7 +41,7 @@ const Index = () => {
                 Login
               </Button>
               <Button 
-                className="bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-white border border-transparent hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#9b87f5] hover:shadow-md min-w-[100px] justify-center text-xs py-1.5"
+                className="bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] text-custom-dark border border-transparent hover:shadow-md min-w-[100px] justify-center text-xs py-1.5"
                 size="xs"
                 onClick={() => navigate("/register")}
               >
@@ -70,7 +68,8 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
                   onClick={() => navigate("/register")}
-                  className="bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-white min-w-[120px] justify-center hover:bg-gradient-to-r hover:from-[#8B5CF6] hover:to-[#9b87f5] hover:shadow-md group"
+                  className="bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] text-custom-dark min-w-[120px] justify-center hover:shadow-md group"
+                  variant="registerBtn"
                 >
                   Sign-Up
                   <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -78,12 +77,13 @@ const Index = () => {
                 <Button 
                   onClick={() => navigate("/login")}
                   className="bg-white text-custom-dark border border-gray-300 min-w-[120px] justify-center hover:bg-white hover:text-custom-dark hover:border-gray-400"
-                  variant="outline"
+                  variant="loginBtn"
                 >
                   Login
                 </Button>
               </div>
             </div>
+            
             <div className="hidden lg:block">
               <div className="glass-card p-8 rounded-lg border border-white/20 shadow-xl relative">
                 <h3 className="text-white text-xl font-semibold mb-6 text-center">Financial Features</h3>
@@ -217,7 +217,7 @@ const Index = () => {
           
           <div className="mt-12 text-center">
             <Button 
-              className="bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-white font-semibold hover:shadow-lg hover:scale-[1.03] hover:brightness-[1.05] min-w-[180px] justify-center px-10 py-6 text-base"
+              className="bg-gradient-to-r from-[#17ffd3] to-[#d3fc71] text-custom-dark font-semibold hover:shadow-lg hover:scale-[1.03] hover:brightness-[1.05] min-w-[180px] justify-center px-10 py-6 text-base"
               size="xl"
               onClick={() => navigate("/register")}
             >
@@ -307,4 +307,3 @@ const Index = () => {
 };
 
 export default Index;
-
