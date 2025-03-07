@@ -49,7 +49,7 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="flex-grow flex items-center py-20 relative overflow-hidden bg-gradient-to-br from-slate-900 to-blue-950">
-        {/* Background Image */}
+        {/* Background Image with animated shapes overlay */}
         <div className="absolute inset-0 w-full h-full">
           <img
             src="/lovable-uploads/483b237a-7371-4738-8d3b-f4c377e50673.png"
@@ -57,9 +57,68 @@ const Index = () => {
             className="w-full h-full object-cover opacity-60"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 to-slate-900/60"></div>
+          
+          {/* Animated shapes */}
+          <div className="absolute inset-0 w-full h-full z-10 pointer-events-none">
+            {/* Blue dot */}
+            <div className="absolute top-[15%] left-[20%] w-4 h-4 bg-blue-600 rounded-full animate-pulse opacity-80"></div>
+            
+            {/* Blue arc */}
+            <div className="absolute top-[25%] right-[25%] opacity-70 animate-float">
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                <path d="M15 40 Q 40 10, 65 40" stroke="#0099ff" strokeWidth="10" strokeLinecap="round" />
+              </svg>
+            </div>
+            
+            {/* Dot pattern */}
+            <div className="absolute bottom-[15%] right-[15%] opacity-60">
+              <img 
+                src="/lovable-uploads/e263974b-4286-4d09-9972-fc853d38cfc7.png"
+                alt="Dot Pattern"
+                className="w-48 h-48 object-contain"
+              />
+            </div>
+            
+            {/* Pink triangle */}
+            <div className="absolute top-[40%] left-[15%] opacity-60 animate-float">
+              <svg width="40" height="40" viewBox="0 0 40 40">
+                <polygon points="20,0 40,40 0,40" fill="#ec407a" />
+              </svg>
+            </div>
+            
+            {/* Green circle */}
+            <div className="absolute top-[60%] left-[25%] w-10 h-10 bg-green-500 rounded-full opacity-70 animate-pulse-slow"></div>
+            
+            {/* Teal arc */}
+            <div className="absolute bottom-[30%] left-[10%] opacity-70 rotate-[30deg] animate-float">
+              <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                <path d="M10 30 Q 30 5, 50 30" stroke="#1de9b6" strokeWidth="8" strokeLinecap="round" />
+              </svg>
+            </div>
+            
+            {/* Gradient circle */}
+            <div className="absolute bottom-[20%] right-[30%] w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 opacity-70 animate-float"></div>
+            
+            {/* Green gradient circle */}
+            <div className="absolute top-[70%] right-[20%] w-14 h-14 rounded-full bg-gradient-to-r from-green-400 to-lime-500 opacity-70 animate-pulse-slow"></div>
+            
+            {/* Another curved line */}
+            <div className="absolute top-[15%] left-[60%] opacity-70 rotate-[210deg] animate-float">
+              <svg width="70" height="70" viewBox="0 0 70 70" fill="none">
+                <path d="M10 35 Q 35 5, 60 35" stroke="#00e5ff" strokeWidth="8" strokeLinecap="round" />
+              </svg>
+            </div>
+            
+            {/* Orange triangle */}
+            <div className="absolute bottom-[40%] right-[10%] opacity-60 animate-float rotate-45">
+              <svg width="35" height="35" viewBox="0 0 35 35">
+                <polygon points="17.5,0 35,35 0,35" fill="#ff9800" />
+              </svg>
+            </div>
+          </div>
         </div>
 
-        <div className="container mx-auto px-6 relative z-10">
+        <div className="container mx-auto px-6 relative z-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="text-white">
               <img 
@@ -96,14 +155,8 @@ const Index = () => {
               </div>
             </div>
             <div className="hidden lg:block">
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/20 shadow-xl transform hover:scale-102 transition-all">
-                <div className="mb-6 flex justify-center">
-                  <img 
-                    src="/lovable-uploads/ca6a196b-ae2f-4233-a3f2-061b279cda67.png" 
-                    alt="Nexus FinLabs Logo" 
-                    className="h-20"
-                  />
-                </div>
+              <div className="glass-card p-8 rounded-lg border border-white/20 shadow-xl transform hover:scale-102 transition-all relative">
+                {/* Remove the white box above Financial Features */}
                 <h3 className="text-white text-xl font-semibold mb-4 text-center">Financial Features</h3>
                 <ul className="text-blue-100 space-y-4">
                   <li className="flex items-start">
