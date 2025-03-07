@@ -40,7 +40,7 @@ const Index = () => {
                 size="sm"
                 onClick={() => navigate("/register")}
               >
-                Register
+                Sign-Upsss
               </Button>
             </div>
           </div>
