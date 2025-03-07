@@ -3,27 +3,26 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { supabase } from "@/lib/supabase";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useDashboard } from "@/lib/dashboard";
 
-interface UserProfile {
-  id: string;
-  email: string;
-  first_name?: string;
-  last_name?: string;
-  company_name?: string;
-  company_description?: string;
-  company_website?: string;
-  doc_count?: number;
-  created_at?: string;
-  updated_at?: string;
-}
-
 const ProfileSection = () => {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<{
+    id: string;
+    email: string;
+    first_name?: string;
+    last_name?: string;
+    company_name?: string;
+    company_description?: string;
+    company_website?: string;
+    doc_count?: number;
+    created_at?: string;
+    updated_at?: string;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const { getUserProfile, updateUserProfile } = useDashboard();
 
   useEffect(() => {
@@ -94,6 +93,7 @@ const ProfileSection = () => {
       } else if (success) {
         console.log("Perfil actualizado correctamente");
         toast.success("Perfil actualizado correctamente");
+        setEditMode(false); // Exit edit mode after successful save
       }
     } catch (err: any) {
       console.error("Error inesperado:", err);
@@ -101,6 +101,16 @@ const ProfileSection = () => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleEditClick = () => {
+    setEditMode(true);
+  };
+
+  const handleCancelEdit = () => {
+    // Reload the profile to discard changes
+    loadProfile();
+    setEditMode(false);
   };
 
   if (loading) {
@@ -112,9 +122,71 @@ const ProfileSection = () => {
     );
   }
 
+  // View mode (default)
+  if (!editMode) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold text-custom-dark">Información de Perfil</h2>
+          <Button onClick={handleEditClick} variant="registerBtn" size="sm">
+            Editar Perfil
+          </Button>
+        </div>
+        
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">Nombre</h3>
+              <p className="text-custom-dark">{profile?.first_name || "No especificado"}</p>
+            </div>
+            
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">Apellido</h3>
+              <p className="text-custom-dark">{profile?.last_name || "No especificado"}</p>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-sm font-medium text-gray-500">Correo Electrónico</h3>
+            <p className="text-custom-dark">{profile?.email || "No especificado"}</p>
+          </div>
+          
+          <div>
+            <h3 className="text-sm font-medium text-gray-500">Nombre de Empresa</h3>
+            <p className="text-custom-dark">{profile?.company_name || "No especificado"}</p>
+          </div>
+          
+          <div>
+            <h3 className="text-sm font-medium text-gray-500">Descripción de Empresa</h3>
+            <p className="text-custom-dark">{profile?.company_description || "No especificado"}</p>
+          </div>
+          
+          <div>
+            <h3 className="text-sm font-medium text-gray-500">Sitio Web de Empresa</h3>
+            <p className="text-custom-dark">
+              {profile?.company_website ? (
+                <a href={profile.company_website} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                  {profile.company_website}
+                </a>
+              ) : (
+                "No especificado"
+              )}
+            </p>
+          </div>
+          
+          <div>
+            <h3 className="text-sm font-medium text-gray-500">Número de Documentos</h3>
+            <p className="text-custom-dark">{profile?.doc_count || 0}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Edit mode
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
-      <h2 className="text-xl font-semibold text-custom-dark mb-6">Información de Perfil</h2>
+      <h2 className="text-xl font-semibold text-custom-dark mb-6">Editar Perfil</h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -154,7 +226,7 @@ const ProfileSection = () => {
         
         <div className="space-y-2">
           <Label htmlFor="company_description">Descripción de Empresa</Label>
-          <textarea
+          <Textarea
             id="company_description"
             name="company_description"
             value={profile?.company_description || ""}
@@ -202,9 +274,12 @@ const ProfileSection = () => {
           <p className="text-xs text-gray-500">Este valor se actualiza automáticamente</p>
         </div>
         
-        <div className="pt-4">
+        <div className="flex gap-3 pt-4">
           <Button type="submit" variant="registerBtn" disabled={saving}>
             {saving ? "Guardando..." : "Guardar Cambios"}
+          </Button>
+          <Button type="button" variant="outline" onClick={handleCancelEdit}>
+            Cancelar
           </Button>
         </div>
       </form>
