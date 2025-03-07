@@ -40,7 +40,7 @@ const Sidebar = ({ collapsed, toggleSidebar }: { collapsed: boolean; toggleSideb
     >
       <div className="p-4 flex items-center justify-between border-b border-gray-200 bg-gray-50">
         {!collapsed && (
-          <h2 className="font-semibold text-custom-dark">Nexus FinLabs</h2>
+          <h2 className="font-semibold text-custom-dark">User Dashboard</h2>
         )}
         <Button 
           variant="ghost" 
@@ -54,7 +54,7 @@ const Sidebar = ({ collapsed, toggleSidebar }: { collapsed: boolean; toggleSideb
       
       <nav className="flex-1 py-4 overflow-y-auto">
         <div className={cn("mb-4 px-4", collapsed ? "hidden" : "block")}>
-          <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Main Menu</h3>
+          <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Menu</h3>
         </div>
         <ul className="space-y-1 px-2">
           {navItems.map((item) => {
@@ -66,14 +66,15 @@ const Sidebar = ({ collapsed, toggleSidebar }: { collapsed: boolean; toggleSideb
                   variant={isActive ? "secondary" : "ghost"}
                   className={cn(
                     "w-full justify-start py-2",
-                    isActive ? "bg-gray-100 font-medium" : "text-gray-700",
+                    isActive && "bg-blue-50 text-blue-600 font-medium border-l-4 border-blue-600",
+                    !isActive && "text-gray-700 hover:bg-gray-100",
                     collapsed ? "px-2 justify-center" : ""
                   )}
                   onClick={() => navigate(item.href)}
                 >
-                  <item.icon size={18} className={cn(isActive ? "text-custom-dark" : "text-gray-500")} />
+                  <item.icon size={18} className={cn(isActive ? "text-blue-600" : "text-gray-500")} />
                   {!collapsed && (
-                    <span className="ml-3">
+                    <span className={cn("ml-3", isActive && "text-blue-600")}>
                       {item.name}
                     </span>
                   )}

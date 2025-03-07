@@ -26,7 +26,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="flex flex-col flex-1 overflow-hidden">
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1 className="text-lg font-semibold text-custom-dark">Control Panel</h1>
+            <h1 className="text-lg font-semibold text-custom-dark">Dashboard</h1>
             <Button variant="yellowGradient" onClick={handleLogout}>Logout</Button>
           </div>
         </header>
