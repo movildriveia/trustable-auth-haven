@@ -8,11 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle, Mail } from "lucide-react";
 import { signUpWithEmail } from "@/lib/supabase";
 
 const registerSchema = z
   .object({
+    fullName: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
     email: z.string().email({ message: "Ingresa un correo electrónico válido" }),
     password: z.string().min(6, { message: "La contraseña debe tener al menos 6 caracteres" }),
     confirmPassword: z.string(),
@@ -26,12 +27,14 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const RegisterForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
+      fullName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -42,18 +45,22 @@ const RegisterForm = () => {
     setIsLoading(true);
 
     try {
-      const { data: userData, error } = await signUpWithEmail(data.email, data.password);
+      const { data: userData, error } = await signUpWithEmail(
+        data.email, 
+        data.password, 
+        { full_name: data.fullName }
+      );
       
       if (error) throw error;
       
+      setIsSuccess(true);
+      
       toast({
         title: "Registro exitoso",
-        description: "Tu cuenta ha sido creada. Verifica tu correo electrónico para confirmar tu cuenta.",
+        description: "Hemos enviado un correo de confirmación. Por favor verifica tu bandeja de entrada.",
+        variant: "default",
       });
       
-      // Nota: Supabase puede configurarse para requerir confirmación de email
-      // En ese caso, redirigimos al login, no al dashboard
-      navigate("/login");
     } catch (error) {
       console.error("Error al registrar:", error);
       toast({
@@ -69,6 +76,31 @@ const RegisterForm = () => {
     }
   };
 
+  if (isSuccess) {
+    return (
+      <div className="text-center space-y-6 py-8">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+          <CheckCircle className="h-10 w-10 text-green-600" />
+        </div>
+        
+        <div className="space-y-2">
+          <h1 className="text-2xl font-bold">Verifica tu correo electrónico</h1>
+          <p className="text-muted-foreground">
+            Hemos enviado un enlace de confirmación a tu correo electrónico.
+            <br />Por favor verifica tu correo para activar tu cuenta.
+          </p>
+        </div>
+        
+        <div className="flex flex-col space-y-3">
+          <Button variant="outline" className="gap-2" onClick={() => navigate("/login")}>
+            <Mail className="h-4 w-4" />
+            Ir a iniciar sesión
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="mb-8 text-center">
@@ -79,7 +111,21 @@ const RegisterForm = () => {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <FormField
+            control={form.control}
+            name="fullName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nombre Completo</FormLabel>
+                <FormControl>
+                  <Input placeholder="Tu nombre completo" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="email"
@@ -122,7 +168,7 @@ const RegisterForm = () => {
             )}
           />
 
-          <Button type="submit" className="w-full bg-brand-600 hover:bg-brand-700" disabled={isLoading}>
+          <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -138,7 +184,7 @@ const RegisterForm = () => {
       <div className="mt-6 text-center">
         <p className="text-sm text-muted-foreground">
           ¿Ya tienes una cuenta?{" "}
-          <Button variant="link" onClick={() => navigate("/login")} className="p-0 text-brand-600 hover:text-brand-700">
+          <Button variant="link" onClick={() => navigate("/login")} className="p-0">
             Inicia Sesión
           </Button>
         </p>

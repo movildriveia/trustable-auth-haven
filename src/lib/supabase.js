@@ -17,13 +17,14 @@ export async function signInWithEmail(email, password) {
   return { data, error };
 }
 
-// Función de registro
+// Función de registro con confirmación de email
 export async function signUpWithEmail(email, password, metadata = {}) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: metadata,
+      emailRedirectTo: `${window.location.origin}/login`,
     },
   });
   return { data, error };
@@ -43,4 +44,42 @@ export function getUser() {
 // Función para obtener la sesión actual
 export function getSession() {
   return supabase.auth.getSession();
+}
+
+// Funciones para gestionar perfiles
+
+// Obtener perfil del usuario actual
+export async function getCurrentProfile() {
+  const { data: { user } } = await getUser();
+  
+  if (!user) return { data: null, error: new Error('No user logged in') };
+  
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+    
+  return { data, error };
+}
+
+// Actualizar perfil
+export async function updateProfile(updates) {
+  const { data: { user } } = await getUser();
+  
+  if (!user) return { data: null, error: new Error('No user logged in') };
+  
+  const { data, error } = await supabase
+    .from('profiles')
+    .update(updates)
+    .eq('id', user.id)
+    .select();
+    
+  return { data, error };
+}
+
+// Verificar si el email está confirmado
+export async function isEmailConfirmed() {
+  const { data: { user } } = await getUser();
+  return user?.email_confirmed_at ? true : false;
 }
