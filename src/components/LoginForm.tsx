@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Loader2 } from "lucide-react";
+import { signInWithEmail } from "@/lib/supabase";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Ingresa un correo electrónico válido" }),
@@ -34,18 +35,16 @@ const LoginForm = () => {
     setIsLoading(true);
 
     try {
-      // Aquí se integraría con Supabase
-      console.log("Datos de inicio de sesión:", data);
+      const { data: userData, error } = await signInWithEmail(data.email, data.password);
       
-      // Simulamos inicio de sesión exitoso
+      if (error) throw error;
+      
       toast({
         title: "Inicio de sesión exitoso",
         description: "Redirigiendo al dashboard...",
       });
       
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1500);
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       toast({

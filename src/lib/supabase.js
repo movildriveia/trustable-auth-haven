@@ -1,9 +1,9 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// Estas variables deberían estar en un archivo .env pero por ahora las colocamos aquí
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Usamos las credenciales proporcionadas
+const supabaseUrl = 'https://qioxddkbyetflxmdghmu.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpb3hkZGtieWV0Zmx4bWRnaG11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA1NzU3NjIsImV4cCI6MjA1NjE1MTc2Mn0.njPacJDLKGMKqtHRmpW5V5rC_x-k23P6NRR0LKLDz5o';
 
 // Crear el cliente de Supabase
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -44,4 +44,3 @@ export function getUser() {
 export function getSession() {
   return supabase.auth.getSession();
 }
-

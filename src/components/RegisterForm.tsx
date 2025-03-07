@@ -9,16 +9,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Loader2 } from "lucide-react";
+import { signUpWithEmail } from "@/lib/supabase";
 
-const registerSchema = z.object({
-  name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
-  email: z.string().email({ message: "Ingresa un correo electrónico válido" }),
-  password: z.string().min(6, { message: "La contraseña debe tener al menos 6 caracteres" }),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Las contraseñas no coinciden",
-  path: ["confirmPassword"],
-});
+const registerSchema = z
+  .object({
+    email: z.string().email({ message: "Ingresa un correo electrónico válido" }),
+    password: z.string().min(6, { message: "La contraseña debe tener al menos 6 caracteres" }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+  });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
@@ -30,7 +32,6 @@ const RegisterForm = () => {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -41,23 +42,26 @@ const RegisterForm = () => {
     setIsLoading(true);
 
     try {
-      // Aquí se integraría con Supabase
-      console.log("Datos de registro:", data);
+      const { data: userData, error } = await signUpWithEmail(data.email, data.password);
       
-      // Simulamos registro exitoso
+      if (error) throw error;
+      
       toast({
         title: "Registro exitoso",
-        description: "Tu cuenta ha sido creada. Ahora puedes iniciar sesión.",
+        description: "Tu cuenta ha sido creada. Verifica tu correo electrónico para confirmar tu cuenta.",
       });
       
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500);
+      // Nota: Supabase puede configurarse para requerir confirmación de email
+      // En ese caso, redirigimos al login, no al dashboard
+      navigate("/login");
     } catch (error) {
       console.error("Error al registrar:", error);
       toast({
         title: "Error al registrar",
-        description: "Ha ocurrido un error. Por favor intenta nuevamente.",
+        description: 
+          error.message === "User already registered" 
+            ? "Este correo ya está registrado" 
+            : "Ha ocurrido un error, por favor intenta nuevamente",
         variant: "destructive",
       });
     } finally {
@@ -68,28 +72,14 @@ const RegisterForm = () => {
   return (
     <div>
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold mb-2">Crear Cuenta</h1>
+        <h1 className="text-3xl font-bold mb-2">Crear una cuenta</h1>
         <p className="text-muted-foreground">
-          Completa el siguiente formulario para crear tu cuenta
+          Regístrate para acceder a todas las funcionalidades
         </p>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nombre Completo</FormLabel>
-                <FormControl>
-                  <Input placeholder="Tu nombre" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="email"
@@ -132,11 +122,11 @@ const RegisterForm = () => {
             )}
           />
 
-          <Button type="submit" className="w-full mt-2 bg-brand-600 hover:bg-brand-700" disabled={isLoading}>
+          <Button type="submit" className="w-full bg-brand-600 hover:bg-brand-700" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creando cuenta...
+                Registrando...
               </>
             ) : (
               "Registrarse"
@@ -149,7 +139,7 @@ const RegisterForm = () => {
         <p className="text-sm text-muted-foreground">
           ¿Ya tienes una cuenta?{" "}
           <Button variant="link" onClick={() => navigate("/login")} className="p-0 text-brand-600 hover:text-brand-700">
-            Inicia sesión
+            Inicia Sesión
           </Button>
         </p>
       </div>
