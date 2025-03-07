@@ -1,96 +1,118 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { getUser, signOut } from "@/lib/supabase";
-import { useToast } from "@/hooks/use-toast";
+import { useDashboard, UserProfile } from "@/lib/dashboard";
+import { useAuth } from "@/lib/auth";
+import { toast } from "sonner";
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { logout, isAuthenticated } = useAuth();
+  const { getUserProfile } = useDashboard();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { data, error } = await getUser();
-        if (error) throw error;
-        
-        if (data.user) {
-          setUser(data.user);
-        } else {
-          // No hay usuario autenticado, redirigir al login
-          navigate("/login");
-        }
-      } catch (error) {
-        console.error("Error al obtener el usuario:", error);
-        toast({
-          title: "Error de autenticación",
-          description: "Por favor inicia sesión nuevamente",
-          variant: "destructive",
-        });
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
         navigate("/login");
+        return;
+      }
+      
+      try {
+        setLoading(true);
+        const { profile, error } = await getUserProfile();
+        
+        if (error) {
+          console.error("Error fetching profile:", error);
+          toast.error("Failed to load user profile");
+        } else {
+          setProfile(profile);
+        }
+      } catch (err) {
+        console.error("Unexpected error:", err);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchUser();
-  }, [navigate, toast]);
+    
+    checkAuth();
+  }, [navigate]);
 
   const handleLogout = async () => {
-    try {
-      const { error } = await signOut();
-      if (error) throw error;
-      
-      toast({
-        title: "Sesión cerrada",
-        description: "Has cerrado sesión correctamente",
-      });
-      navigate("/login");
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-      toast({
-        title: "Error al cerrar sesión",
-        description: "Por favor intenta nuevamente",
-        variant: "destructive",
-      });
-    }
+    await logout();
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-600"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="p-8 bg-white rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold mb-4">Loading...</h2>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="mb-8 flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <Button onClick={handleLogout} variant="outline">Cerrar Sesión</Button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Información del Usuario</CardTitle>
-            <CardDescription>Datos de tu cuenta</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <p><span className="font-semibold">Email:</span> {user?.email}</p>
-              <p><span className="font-semibold">ID:</span> {user?.id}</p>
-              <p><span className="font-semibold">Último inicio:</span> {new Date(user?.last_sign_in_at || Date.now()).toLocaleString()}</p>
+    <div className="min-h-screen bg-gray-100">
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-custom-dark">Nexus FinLabs Dashboard</h1>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-sm text-gray-500">Welcome,</p>
+              <p className="font-medium">{profile?.first_name} {profile?.last_name}</p>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Aquí puedes agregar más tarjetas con información o funcionalidades */}
-      </div>
+            <Button variant="outline" onClick={handleLogout}>Logout</Button>
+          </div>
+        </div>
+      </header>
+      
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white shadow rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-6">Dashboard Overview</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-lg shadow-sm">
+              <h3 className="text-lg font-medium text-blue-900 mb-2">Profile</h3>
+              <p className="text-sm text-blue-800 mb-4">Your account information</p>
+              <Button 
+                variant="gradient" 
+                className="text-sm" 
+                onClick={() => navigate("/profile")}
+              >
+                View Profile
+              </Button>
+            </div>
+            
+            <div className="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-lg shadow-sm">
+              <h3 className="text-lg font-medium text-green-900 mb-2">Documents</h3>
+              <p className="text-sm text-green-800 mb-4">Manage your uploads</p>
+              <Button 
+                variant="blue" 
+                className="text-sm" 
+                onClick={() => navigate("/documents")}
+              >
+                View Documents
+              </Button>
+            </div>
+            
+            <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-6 rounded-lg shadow-sm">
+              <h3 className="text-lg font-medium text-purple-900 mb-2">Settings</h3>
+              <p className="text-sm text-purple-800 mb-4">Configure your account</p>
+              <Button 
+                variant="reverseGradient" 
+                className="text-sm" 
+                onClick={() => navigate("/settings")}
+              >
+                View Settings
+              </Button>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
