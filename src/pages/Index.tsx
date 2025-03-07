@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -274,7 +275,7 @@ const Index = () => {
               <h3 className="text-xl font-semibold mb-2 text-custom-dark">Visit Us</h3>
               <p className="text-gray-600 mb-4">Our offices are open Monday to Friday.</p>
               <Button 
-                variant="purple" 
+                variant="reverseGradient" 
                 size="lg" 
                 className="group w-full justify-center"
                 onClick={() => window.open('https://maps.google.com', '_blank')}

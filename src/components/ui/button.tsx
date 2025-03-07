@@ -16,6 +16,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         gradient: "bg-gradient-to-r from-[#17ffd3] to-[#d3fc71] text-custom-dark font-medium hover:shadow-md hover:scale-[1.02] hover:brightness-[1.05]",
+        reverseGradient: "bg-gradient-to-r from-[#d3fc71] to-[#17ffd3] text-custom-dark font-medium hover:shadow-md hover:scale-[1.02] hover:brightness-[1.05]",
         blue: "bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] text-custom-dark font-medium hover:shadow-md hover:scale-[1.02] hover:brightness-[1.05]",
         purple: "bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-white font-medium hover:shadow-md hover:scale-[1.02] hover:brightness-[1.05]",
         turquoise: "bg-[#23e3ee] text-custom-dark font-medium hover:shadow-md hover:scale-[1.02] hover:brightness-[1.05]",
