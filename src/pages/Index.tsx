@@ -2,41 +2,45 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ExternalLink, ChevronRight } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col font-poppins">
+    <div className="min-h-screen flex flex-col font-poppins overflow-x-hidden">
       {/* Header */}
-      <header className="bg-white py-4 px-6 shadow-sm">
+      <header className="bg-white/90 backdrop-blur-sm py-4 px-6 shadow-sm sticky top-0 z-50">
         <div className="container mx-auto flex justify-between items-center">
           <div className="text-2xl font-bold text-custom-dark flex items-center gap-3">
             <img 
               src="/lovable-uploads/cef7b659-e171-45b6-ab88-91595b5a7ffd.png" 
               alt="Nexus FinLabs" 
-              className="h-12"
+              className="h-10"
             />
           </div>
           <div className="flex items-center gap-8">
             <nav className="hidden md:flex items-center gap-8 mr-8">
-              <a href="#" className="text-custom-dark hover:text-primary-custom transition-colors">Home</a>
-              <a href="#contact" className="text-custom-dark hover:text-primary-custom transition-colors">Contact</a>
+              <a href="#" className="text-custom-dark hover:text-primary-custom transition-colors font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all">Home</a>
+              <a href="#services" className="text-custom-dark hover:text-primary-custom transition-colors font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all">Services</a>
+              <a href="#contact" className="text-custom-dark hover:text-primary-custom transition-colors font-medium relative after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] after:transition-all">Contact</a>
             </nav>
             <div className="flex gap-3">
               <Button 
-                variant="turquoise"
+                variant="outline"
                 size="sm"
                 onClick={() => navigate("/login")}
+                className="font-medium border-gray-300 hover:text-blue-600 hover:border-blue-600"
               >
-                Iniciar Sesión
+                Login
               </Button>
               <Button 
-                variant="gradient"
+                variant="blue"
                 size="sm"
                 onClick={() => navigate("/register")}
+                className="font-medium"
               >
-                Registrarse
+                Register
               </Button>
             </div>
           </div>
@@ -44,14 +48,30 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="flex-grow flex items-center section bg-gradient-to-br from-blue-50 to-green-50">
-        <div className="container mx-auto px-6">
+      <section className="flex-grow flex items-center py-20 relative overflow-hidden bg-gradient-to-br from-slate-900 to-blue-950">
+        {/* Background Image */}
+        <div className="absolute inset-0 w-full h-full">
+          <img
+            src="/lovable-uploads/483b237a-7371-4738-8d3b-f4c377e50673.png"
+            alt="Background"
+            className="w-full h-full object-cover opacity-60"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 to-slate-900/60"></div>
+        </div>
+
+        <div className="container mx-auto px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-3 text-custom-dark">
-                FinTech<br/>Observatory
+            <div className="text-white">
+              <img 
+                src="/lovable-uploads/82ddc0b6-d4e5-4a0a-a102-0eda212f379c.png" 
+                alt="Nexus FinLabs Logo" 
+                className="h-20 mb-6"
+              />
+              <h1 className="text-4xl md:text-5xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
+                FinTech<br/>
+                Observatory
               </h1>
-              <p className="text-xl text-color mb-4">
+              <p className="text-xl text-blue-100 mb-8 font-light">
                 Your financial playground.<br/>
                 Powered by data, built for you.
               </p>
@@ -60,30 +80,23 @@ const Index = () => {
                   onClick={() => navigate("/register")}
                   variant="gradient"
                   size="default"
+                  className="group"
                 >
-                  Comenzar Ahora
+                  Get Started
+                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
                 <Button 
                   onClick={() => navigate("/login")}
-                  variant="turquoise"
+                  variant="outline"
                   size="default"
+                  className="bg-transparent border-white/30 hover:bg-white/10 text-white"
                 >
-                  Iniciar Sesión
+                  Login
                 </Button>
               </div>
             </div>
-            <div className="hidden lg:block bg-gradient-to-br from-[#17ffd3] to-[#d3fc71] p-8 rounded-xl shadow-xl relative">
-              <div className="hero-bg-1 animate-left-right">
-                <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="10.5" cy="10.5" r="10.5" fill="#17FFD3" fillOpacity="0.3"/>
-                </svg>
-              </div>
-              <div className="hero-bg-2 animate-up-down">
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="7.5" cy="7.5" r="7.5" fill="#D3FC71" fillOpacity="0.3"/>
-                </svg>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/20">
+            <div className="hidden lg:block">
+              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/20 shadow-xl transform hover:scale-102 transition-all">
                 <div className="mb-6 flex justify-center">
                   <img 
                     src="/lovable-uploads/ca6a196b-ae2f-4233-a3f2-061b279cda67.png" 
@@ -91,30 +104,38 @@ const Index = () => {
                     className="h-20"
                   />
                 </div>
-                <h3 className="text-custom-dark text-xl font-semibold mb-4 text-center">Financial Features</h3>
-                <ul className="text-custom-dark space-y-3">
+                <h3 className="text-white text-xl font-semibold mb-4 text-center">Financial Features</h3>
+                <ul className="text-blue-100 space-y-4">
                   <li className="flex items-start">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-custom-dark mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <div className="bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] rounded-full p-1 mr-3 mt-0.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
                     Real-time market analysis
                   </li>
                   <li className="flex items-start">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-custom-dark mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <div className="bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] rounded-full p-1 mr-3 mt-0.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
                     Personalized portfolios
                   </li>
                   <li className="flex items-start">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-custom-dark mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <div className="bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] rounded-full p-1 mr-3 mt-0.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
                     AI-powered predictions
                   </li>
                   <li className="flex items-start">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-custom-dark mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <div className="bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] rounded-full p-1 mr-3 mt-0.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
                     Risk management tools
                   </li>
                 </ul>
@@ -125,15 +146,51 @@ const Index = () => {
       </section>
 
       {/* Ready to Start Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-6 max-w-3xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-custom-dark">Ready to Start?</h2>
-          <p className="text-lg mb-8">
-            Kickstart your journey with us by filling out a quick form to get to know you better!
-          </p>
-          <div className="flex justify-center">
+      <section id="services" className="py-20 bg-white">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-custom-dark">Ready to Start?</h2>
+            <div className="w-20 h-1 bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] mx-auto mb-6"></div>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Kickstart your journey with Nexus FinLabs by filling out a quick form to get to know you better!
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-6 border border-gray-100 hover:border-blue-100 group">
+              <div className="w-14 h-14 mb-4 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-500 group-hover:text-blue-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-custom-dark">Data Analysis</h3>
+              <p className="text-gray-600 mb-4">Access advanced financial data analysis with intuitive visualizations.</p>
+            </div>
+            
+            <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-6 border border-gray-100 hover:border-blue-100 group">
+              <div className="w-14 h-14 mb-4 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-500 group-hover:text-blue-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-custom-dark">Smart Insights</h3>
+              <p className="text-gray-600 mb-4">AI-powered recommendations tailored to your financial goals.</p>
+            </div>
+            
+            <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-6 border border-gray-100 hover:border-blue-100 group">
+              <div className="w-14 h-14 mb-4 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-500 group-hover:text-blue-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-custom-dark">Secure Platform</h3>
+              <p className="text-gray-600 mb-4">Enterprise-grade security protecting your financial data.</p>
+            </div>
+          </div>
+          
+          <div className="mt-12 text-center">
             <Button 
-              variant="gradient"
+              variant="blue"
               size="lg"
               onClick={() => navigate("/register")}
               className="px-10"
@@ -145,44 +202,82 @@ const Index = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-16 bg-gray-50">
+      <section id="contact" className="py-20 bg-gray-50">
         <div className="container mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-custom-dark">Contáctanos</h2>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-custom-dark">Contact Us</h2>
+            <div className="w-20 h-1 bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] mx-auto mb-6"></div>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Have questions about Nexus FinLabs? Our team is ready to assist you.
+            </p>
+          </div>
           
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow text-center">
-              <h3 className="text-xl font-semibold mb-4 text-custom-dark">Escríbenos</h3>
-              <p className="text-custom-text mb-6">Envíanos un email con tus dudas o requerimientos.</p>
-              <Button variant="turquoise" size="sm">Email</Button>
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center border border-gray-100 hover:border-blue-100">
+              <div className="w-14 h-14 mx-auto mb-4 bg-blue-50 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-custom-dark">Email Us</h3>
+              <p className="text-gray-600 mb-4">Send us an email with your questions or requirements.</p>
+              <Button variant="turquoise" size="sm" className="group">
+                Email
+                <ExternalLink className="ml-1 h-3.5 w-3.5 opacity-70" />
+              </Button>
             </div>
             
-            <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow text-center">
-              <h3 className="text-xl font-semibold mb-4 text-custom-dark">Llámanos</h3>
-              <p className="text-custom-text mb-6">Agenda una llamada para discutir tu proyecto.</p>
-              <Button variant="gradient" size="sm">Agendar</Button>
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center border border-gray-100 hover:border-blue-100">
+              <div className="w-14 h-14 mx-auto mb-4 bg-blue-50 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-custom-dark">Call Us</h3>
+              <p className="text-gray-600 mb-4">Schedule a call to discuss your project.</p>
+              <Button variant="gradient" size="sm" className="group">
+                Schedule
+                <ExternalLink className="ml-1 h-3.5 w-3.5 opacity-70" />
+              </Button>
             </div>
             
-            <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow text-center">
-              <h3 className="text-xl font-semibold mb-4 text-custom-dark">Visítanos</h3>
-              <p className="text-custom-text mb-6">Nuestras oficinas están abiertas de lunes a viernes.</p>
-              <Button variant="blue" size="sm">Dirección</Button>
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center border border-gray-100 hover:border-blue-100">
+              <div className="w-14 h-14 mx-auto mb-4 bg-blue-50 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-custom-dark">Visit Us</h3>
+              <p className="text-gray-600 mb-4">Our offices are open Monday to Friday.</p>
+              <Button variant="blue" size="sm" className="group">
+                Directions
+                <ExternalLink className="ml-1 h-3.5 w-3.5 opacity-70" />
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-50 border-t py-8">
-        <div className="container mx-auto px-6 text-center">
-          <div className="flex justify-center mb-4">
-            <img 
-              src="/lovable-uploads/25877594-b9f1-47b1-9b83-99aed8b6cfc7.png" 
-              alt="Nexus FinLabs" 
-              className="h-10"
-            />
-          </div>
-          <div className="text-color text-sm">
-            Nexus FinLabs - Observatory &copy; {new Date().getFullYear()} - All rights reserved
+      <footer className="bg-slate-900 text-white py-10">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex justify-center mb-6 md:mb-0">
+              <img 
+                src="/lovable-uploads/25877594-b9f1-47b1-9b83-99aed8b6cfc7.png" 
+                alt="Nexus FinLabs" 
+                className="h-10"
+              />
+            </div>
+            <div className="flex gap-8 mb-6 md:mb-0">
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">Home</a>
+              <a href="#services" className="text-gray-400 hover:text-white transition-colors">Services</a>
+              <a href="#contact" className="text-gray-400 hover:text-white transition-colors">Contact</a>
+            </div>
+            <div className="text-gray-400 text-sm">
+              © {new Date().getFullYear()} Nexus FinLabs - Observatory. All rights reserved.
+            </div>
           </div>
         </div>
       </footer>

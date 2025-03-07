@@ -20,6 +20,8 @@ const buttonVariants = cva(
         purple: "bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] text-white font-medium hover:shadow-md hover:scale-[1.02] hover:brightness-[1.05]",
         turquoise: "bg-[#23e3ee] text-custom-dark font-medium hover:shadow-md hover:scale-[1.02] hover:brightness-[1.05]",
         lime: "bg-[#d3fc71] text-custom-dark font-medium hover:shadow-md hover:scale-[1.02] hover:brightness-[1.05]",
+        modern: "bg-white border border-gray-200 text-slate-900 hover:border-blue-400 hover:text-blue-600 hover:shadow-md",
+        glass: "bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-white/20 hover:shadow-md",
       },
       size: {
         default: "h-8 px-4 py-1",
