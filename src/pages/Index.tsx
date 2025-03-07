@@ -1,8 +1,7 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, ChevronRight } from "lucide-react";
+import { ExternalLink, ChevronRight, BarChart3, LightbulbIcon, GanttChartSquare } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -49,7 +48,7 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="flex-grow flex items-center py-20 relative overflow-hidden bg-gradient-to-br from-slate-900 to-blue-950">
-        {/* Background Image with animated shapes overlay */}
+        {/* Background Image */}
         <div className="absolute inset-0 w-full h-full">
           <img
             src="/lovable-uploads/483b237a-7371-4738-8d3b-f4c377e50673.png"
@@ -57,65 +56,6 @@ const Index = () => {
             className="w-full h-full object-cover opacity-60"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 to-slate-900/60"></div>
-          
-          {/* Animated shapes */}
-          <div className="absolute inset-0 w-full h-full z-10 pointer-events-none">
-            {/* Blue dot */}
-            <div className="absolute top-[15%] left-[20%] w-4 h-4 bg-blue-600 rounded-full animate-pulse opacity-80"></div>
-            
-            {/* Blue arc */}
-            <div className="absolute top-[25%] right-[25%] opacity-70 animate-float">
-              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                <path d="M15 40 Q 40 10, 65 40" stroke="#0099ff" strokeWidth="10" strokeLinecap="round" />
-              </svg>
-            </div>
-            
-            {/* Dot pattern */}
-            <div className="absolute bottom-[15%] right-[15%] opacity-60">
-              <img 
-                src="/lovable-uploads/e263974b-4286-4d09-9972-fc853d38cfc7.png"
-                alt="Dot Pattern"
-                className="w-48 h-48 object-contain"
-              />
-            </div>
-            
-            {/* Pink triangle */}
-            <div className="absolute top-[40%] left-[15%] opacity-60 animate-float">
-              <svg width="40" height="40" viewBox="0 0 40 40">
-                <polygon points="20,0 40,40 0,40" fill="#ec407a" />
-              </svg>
-            </div>
-            
-            {/* Green circle */}
-            <div className="absolute top-[60%] left-[25%] w-10 h-10 bg-green-500 rounded-full opacity-70 animate-pulse-slow"></div>
-            
-            {/* Teal arc */}
-            <div className="absolute bottom-[30%] left-[10%] opacity-70 rotate-[30deg] animate-float">
-              <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                <path d="M10 30 Q 30 5, 50 30" stroke="#1de9b6" strokeWidth="8" strokeLinecap="round" />
-              </svg>
-            </div>
-            
-            {/* Gradient circle */}
-            <div className="absolute bottom-[20%] right-[30%] w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 opacity-70 animate-float"></div>
-            
-            {/* Green gradient circle */}
-            <div className="absolute top-[70%] right-[20%] w-14 h-14 rounded-full bg-gradient-to-r from-green-400 to-lime-500 opacity-70 animate-pulse-slow"></div>
-            
-            {/* Another curved line */}
-            <div className="absolute top-[15%] left-[60%] opacity-70 rotate-[210deg] animate-float">
-              <svg width="70" height="70" viewBox="0 0 70 70" fill="none">
-                <path d="M10 35 Q 35 5, 60 35" stroke="#00e5ff" strokeWidth="8" strokeLinecap="round" />
-              </svg>
-            </div>
-            
-            {/* Orange triangle */}
-            <div className="absolute bottom-[40%] right-[10%] opacity-60 animate-float rotate-45">
-              <svg width="35" height="35" viewBox="0 0 35 35">
-                <polygon points="17.5,0 35,35 0,35" fill="#ff9800" />
-              </svg>
-            </div>
-          </div>
         </div>
 
         <div className="container mx-auto px-6 relative z-20">
@@ -155,7 +95,7 @@ const Index = () => {
               </div>
             </div>
             <div className="hidden lg:block">
-              <div className="glass-card p-8 rounded-lg border border-white/20 shadow-xl transform hover:scale-102 transition-all relative">
+              <div className="glass-card p-8 rounded-lg border border-white/20 shadow-xl relative">
                 {/* Remove the white box above Financial Features */}
                 <h3 className="text-white text-xl font-semibold mb-4 text-center">Financial Features</h3>
                 <ul className="text-blue-100 space-y-4">
@@ -210,34 +150,28 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-6 border border-gray-100 hover:border-blue-100 group">
-              <div className="w-14 h-14 mb-4 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-500 group-hover:text-blue-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
+            <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-8 border border-gray-100 hover:border-blue-100 group text-center">
+              <div className="mx-auto w-16 h-16 mb-6 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] transition-all">
+                <BarChart3 className="h-8 w-8 text-blue-500 group-hover:text-blue-900" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-custom-dark">Data Analysis</h3>
-              <p className="text-gray-600 mb-4">Access advanced financial data analysis with intuitive visualizations.</p>
+              <h3 className="text-xl font-semibold mb-3 text-custom-dark">Data Analysis</h3>
+              <p className="text-gray-600">Access advanced financial data analysis with intuitive visualizations.</p>
             </div>
             
-            <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-6 border border-gray-100 hover:border-blue-100 group">
-              <div className="w-14 h-14 mb-4 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-500 group-hover:text-blue-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
+            <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-8 border border-gray-100 hover:border-blue-100 group text-center">
+              <div className="mx-auto w-16 h-16 mb-6 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] transition-all">
+                <LightbulbIcon className="h-8 w-8 text-blue-500 group-hover:text-blue-900" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-custom-dark">Smart Insights</h3>
-              <p className="text-gray-600 mb-4">AI-powered recommendations tailored to your financial goals.</p>
+              <h3 className="text-xl font-semibold mb-3 text-custom-dark">Smart Insights</h3>
+              <p className="text-gray-600">AI-powered recommendations tailored to your financial goals.</p>
             </div>
             
-            <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-6 border border-gray-100 hover:border-blue-100 group">
-              <div className="w-14 h-14 mb-4 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-500 group-hover:text-blue-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
+            <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-8 border border-gray-100 hover:border-blue-100 group text-center">
+              <div className="mx-auto w-16 h-16 mb-6 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r from-[#17ffd3] to-[#23e3ee] transition-all">
+                <GanttChartSquare className="h-8 w-8 text-blue-500 group-hover:text-blue-900" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-custom-dark">Secure Platform</h3>
-              <p className="text-gray-600 mb-4">Enterprise-grade security protecting your financial data.</p>
+              <h3 className="text-xl font-semibold mb-3 text-custom-dark">M&A Valuations</h3>
+              <p className="text-gray-600">Expert analysis and valuation for mergers and acquisitions.</p>
             </div>
           </div>
           
