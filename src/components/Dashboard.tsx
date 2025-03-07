@@ -1,9 +1,7 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDashboard, UserProfile } from "@/lib/dashboard";
 import { useAuth } from "@/lib/auth";
-import { toast } from "sonner";
 import DashboardLayout from "./dashboard/DashboardLayout";
 import DocumentsSection from "./dashboard/DocumentsSection";
 
@@ -20,7 +18,7 @@ const Dashboard = () => {
     };
     
     checkAuth();
-  }, [navigate]);
+  }, [navigate, isAuthenticated]);
 
   return (
     <DashboardLayout>

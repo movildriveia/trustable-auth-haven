@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { useDashboard } from "@/lib/dashboard";
 
 interface UserProfile {
   id: string;
@@ -23,6 +24,7 @@ const ProfileSection = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const { getUserProfile, updateUserProfile } = useDashboard();
 
   useEffect(() => {
     loadProfile();
@@ -32,33 +34,22 @@ const ProfileSection = () => {
     setLoading(true);
     
     try {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError || !sessionData.session) {
-        toast.error("No se encontró una sesión activa");
-        setLoading(false);
-        return;
-      }
-      
-      const userId = sessionData.session.user.id;
-      console.log("User ID:", userId);
-      
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
+      console.log("Iniciando carga de perfil...");
+      const { profile, error } = await getUserProfile();
       
       if (error) {
         console.error("Error al cargar perfil:", error);
         toast.error(`Error al cargar perfil: ${error.message}`);
-      } else if (data) {
-        console.log("Perfil cargado:", data);
-        setProfile(data);
+      } else if (profile) {
+        console.log("Perfil cargado exitosamente:", profile);
+        setProfile(profile);
+      } else {
+        console.error("No se encontró perfil");
+        toast.error("No se encontró información de perfil");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error inesperado:", err);
-      toast.error("Ocurrió un error inesperado");
+      toast.error(`Ocurrió un error inesperado: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -81,24 +72,7 @@ const ProfileSection = () => {
     setSaving(true);
     
     try {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError || !sessionData.session) {
-        toast.error("No se encontró una sesión activa");
-        setSaving(false);
-        return;
-      }
-      
-      const userId = sessionData.session.user.id;
-      
-      // Asegurarnos de que el usuario solo pueda modificar su propio perfil
-      if (userId !== profile.id) {
-        toast.error("Solo puedes modificar tu propio perfil");
-        setSaving(false);
-        return;
-      }
-      
-      console.log("Actualizando perfil con datos:", {
+      console.log("Iniciando actualización de perfil con datos:", {
         first_name: profile.first_name,
         last_name: profile.last_name,
         company_name: profile.company_name,
@@ -106,27 +80,24 @@ const ProfileSection = () => {
         company_website: profile.company_website,
       });
       
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          first_name: profile.first_name,
-          last_name: profile.last_name,
-          company_name: profile.company_name,
-          company_description: profile.company_description,
-          company_website: profile.company_website,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', userId);
+      const { success, error } = await updateUserProfile({
+        first_name: profile.first_name,
+        last_name: profile.last_name,
+        company_name: profile.company_name,
+        company_description: profile.company_description,
+        company_website: profile.company_website,
+      });
       
       if (error) {
         console.error("Error al actualizar perfil:", error);
         toast.error(`Error al actualizar perfil: ${error.message}`);
-      } else {
+      } else if (success) {
+        console.log("Perfil actualizado correctamente");
         toast.success("Perfil actualizado correctamente");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error inesperado:", err);
-      toast.error("Ocurrió un error inesperado");
+      toast.error(`Ocurrió un error inesperado: ${err.message}`);
     } finally {
       setSaving(false);
     }
