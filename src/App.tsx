@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -43,16 +42,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => {
-  const [useSimpleIndex, setUseSimpleIndex] = useState(true);
-
-  useEffect(() => {
-    // Try to load the full index after a delay
-    setTimeout(() => {
-      setUseSimpleIndex(false);
-    }, 2000);
-  }, []);
-
-  console.log("App rendering, using simple index:", useSimpleIndex);
+  console.log("App rendering");
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -60,7 +50,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <Routes>
-          <Route path="/" element={useSimpleIndex ? <SimpleIndex /> : <Index />} />
+          <Route path="/" element={<Index />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/signup" element={<RegisterPage />} />
