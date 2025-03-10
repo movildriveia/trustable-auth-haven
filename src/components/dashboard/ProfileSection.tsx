@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getUserProfile, updateUserProfile } from "@/utils/supabase"; // Adjust the import path
+import { getUserProfile, updateUserProfile } from "@/lib/supabase"; // Adjust the import path
 
 const ProfileSection = () => {
   const [profile, setProfile] = useState(null);
