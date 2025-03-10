@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { uploadDocument, deleteDocument, getUserDocuments } from "@/utils/supabase"; // Adjust the import path
+import { uploadDocument, deleteDocument, getUserDocuments } from "@/lib/supabase"; // Adjust the import path
 
 const DocumentSection = () => {
   const [documents, setDocuments] = useState([]);
