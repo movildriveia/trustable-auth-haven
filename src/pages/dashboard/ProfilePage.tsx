@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import ProfileSection from "@/components/dashboard/ProfileSection";
-import { getUserProfile } from "@/utils/supabase"; // Adjust the import path as needed
+import { getUserProfile } from "@/lib/supabase"; // Adjust the import path as needed
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
