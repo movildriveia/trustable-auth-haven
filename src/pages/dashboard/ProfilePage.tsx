@@ -22,9 +22,15 @@ const ProfilePage = () => {
     setLoading(false);
   };
 
-  const handleEditProfile = async () => {
-    // Fetch the profile data again when the "Editar Perfil" button is clicked
-    await fetchProfile();
+  // Function to handle profile updates
+  const handleUpdateProfile = async (updatedProfile) => {
+    const { success, error } = await updateUserProfile(updatedProfile);
+    if (success) {
+      await fetchProfile(); // Refetch profile data to update the UI
+    } else {
+      console.error("Error updating profile:", error);
+    }
+    setLoading(false);
   };
 
   if (loading) {
@@ -33,9 +39,12 @@ const ProfilePage = () => {
 
   return (
     <DashboardLayout>
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6 text-custom-dark">Mi Perfil</h1>
-        <ProfileSection profile={profile} onEdit={handleEditProfile} />
+      <div className="max-w-4xl mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-6 text-custom-dark">Profile</h1>
+        <ProfileSection
+          profile={profile}
+          onUpdate={handleUpdateProfile}
+        />
       </div>
     </DashboardLayout>
   );
