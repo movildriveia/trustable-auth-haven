@@ -1,29 +1,36 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
-import DashboardLayout from "./dashboard/DashboardLayout";
-import DocumentsSection from "./dashboard/DocumentsSection";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import DocumentsSection from "@/components/dashboard/DocumentsSection";
 import DocumentsContainer from "./DocumentsContainer";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Shield, User, Clock, Key, LogOut, LayoutDashboard } from "lucide-react";
 import { useDashboard } from "@/lib/dashboard";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
+interface FormData {
+  first_name: string;
+  last_name: string;
+  company_name: string;
+}
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
-  const { getUserProfile, updateProfile } = useDashboard();
-  const [profile, setProfile] = useState(null);
+  const { getUserProfile, updateUserProfile } = useDashboard();
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     first_name: "",
     last_name: "",
     company_name: "",
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -41,9 +48,9 @@ const Dashboard = () => {
   useEffect(() => {
     if (profile) {
       setFormData({
-        first_name: profile.first_name,
-        last_name: profile.last_name,
-        company_name: profile.company_name,
+        first_name: profile.first_name || "",
+        last_name: profile.last_name || "",
+        company_name: profile.company_name || "",
       });
     }
   }, [profile]);
@@ -65,7 +72,7 @@ const Dashboard = () => {
   };
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: Record<string, string> = {};
     if (!formData.first_name) newErrors.first_name = "First name is required";
     if (!formData.last_name) newErrors.last_name = "Last name is required";
     if (!formData.company_name) newErrors.company_name = "Company name is required";
@@ -76,10 +83,10 @@ const Dashboard = () => {
   const handleSaveProfile = async () => {
     if (!validateForm()) return;
 
-    const { success, error } = await updateProfile(formData);
+    const { success, error } = await updateUserProfile(formData);
     if (success) {
       setIsEditing(false);
-      loadUserProfile(); // Recargar el perfil para reflejar los cambios
+      loadUserProfile(); // Reload the profile to reflect the changes
     } else {
       console.error("Error updating profile:", error);
     }

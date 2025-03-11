@@ -166,7 +166,7 @@ const ProfileSection = () => {
             </div>
             
             <Button onClick={handleEditClick} className="mt-4">
-              Edit Profile
+              Editar Perfil
             </Button>
           </div>
         )}
